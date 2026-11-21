@@ -18,13 +18,13 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Git repo created (github.com/iheblam/Corvalis-take-home) + first commit pushed
 
 ## 1. Backend: leave (0:15–1:00)
-- [ ] `models.py`: Employee, LeaveAllowance, LeaveRequest, PublicHoliday (+ enums)
-- [ ] `services/workdays.py`: Belgian holidays (Easter-based), Sunday replacement day, working-day count
-- [ ] `services/leave_rules.py`: balance (carry-over until 31 Mar), validation, permissions
-- [ ] `deps.py`: current user from `X-User-Id`
-- [ ] Routers: employees, leave-requests (+ preview / approve / reject / cancel / certificate), calendar, availability, holidays
-- [ ] `seed.py`: 50 employees (3/18/14/5/10), holidays 2026–2027, ~100 requests
-- [ ] Tests: workdays, leave rules, API happy path + error cases
+- [x] `models.py`: Employee, LeaveAllowance, LeaveRequest, PublicHoliday (+ enums). Timestamps stored in UTC (SQLModel requires tz-aware datetimes).
+- [x] `services/workdays.py`: Belgian holidays (Easter-based), Sunday replacement day = next working day, working-day count
+- [x] `services/leave_rules.py`: balance (carry-over only covers days ≤ 31 Mar), validation (errors + warnings), permissions
+- [x] `deps.py`: current user from `X-User-Id`
+- [x] Routers: employees (+ balance), leave-requests (list scopes mine/team/to_approve/all, preview, create, approve, reject with reason, cancel, certificate), calendar + availability + holidays (one file: `routers/calendar.py`); `presenters.py` hides sick reason from colleagues ("away")
+- [x] `seed.py`: 50 employees (3/18/14/5/10) with managers, holidays prev/current/next year, ~340 requests generated around today (fixed random seed). Reset: `uv run python -m app.seed --reset`
+- [x] Tests: 16 passing (workdays, leave rules, API flow, permissions, privacy)
 
 ## 2. Frontend: leave (1:00–2:00)
 - [ ] Layout, nav, user switcher (`X-User-Id`), API client + types
