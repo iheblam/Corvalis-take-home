@@ -48,3 +48,18 @@ export const ChatIcon = (p: P) => (
 export const InboxIcon = (p: P) => (
   <Svg {...p}><path d="M3 13.5 5.5 5h13L21 13.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="M3 13.5h5l1.5 2.5h5l1.5-2.5h5" /></Svg>
 )
+export const SendIcon = (p: P) => (
+  <Svg {...p}><path d="M4 12 20 4l-4 16-4-6.5z" /><path d="m12 13.5 8-9.5" /></Svg>
+)
+export const ExpandIcon = (p: P) => (
+  <Svg {...p}><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7" /></Svg>
+)
+export const ThumbUpIcon = (p: P) => (
+  <Svg {...p}><path d="M7 11v9H4v-9zM7 11l4-7c1.5 0 2.5 1 2.2 2.6L12.6 10H19a2 2 0 0 1 2 2.3l-1.2 6A2 2 0 0 1 17.8 20H7" /></Svg>
+)
+export const ThumbDownIcon = (p: P) => (
+  <Svg {...p}><path d="M7 13V4H4v9zM7 13l4 7c1.5 0 2.5-1 2.2-2.6L12.6 14H19a2 2 0 0 0 2-2.3l-1.2-6A2 2 0 0 0 17.8 4H7" /></Svg>
+)
+export const BotIcon = (p: P) => (
+  <Svg {...p}><rect x="4" y="7.5" width="16" height="12" rx="4" /><path d="M12 7.5V4.5M12 4.5h.01" /><circle cx="9" cy="13.5" r="1.2" fill="currentColor" /><circle cx="15" cy="13.5" r="1.2" fill="currentColor" /><path d="M2 12.5v3M22 12.5v3" /></Svg>
+)

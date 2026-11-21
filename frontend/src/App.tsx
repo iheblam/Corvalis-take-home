@@ -1,8 +1,10 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { ChatWidget } from './components/chat/ChatWidget'
 import { GuideProvider } from './components/Guide'
 import { Layout } from './components/Layout'
 import { NoAccess } from './pages/NoAccess'
 import { ErrorBox, Loading } from './components/ui'
+import { ChatProvider } from './context/ChatContext'
 import { canApprove, CurrentUserProvider, useCurrentUser } from './context/CurrentUser'
 import { Approvals } from './pages/Approvals'
 import { Assistant } from './pages/Assistant'
@@ -22,6 +24,7 @@ function Shell() {
 
   return (
     <GuideProvider>
+    <ChatProvider key={user.id}>
     <Layout>
       {/* key: every page reloads its data when you switch user */}
       <Routes key={user.id}>
@@ -36,6 +39,8 @@ function Shell() {
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>
+    <ChatWidget />
+    </ChatProvider>
     </GuideProvider>
   )
 }

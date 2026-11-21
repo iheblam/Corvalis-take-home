@@ -76,14 +76,16 @@ export const TOUR_STEPS: TourStep[] = [
     body: 'HR: sick leave longer than one day needs a certificate. Tick it when it arrives.' },
 
   // Ask the rules (P1)
+  { id: 'as-launcher', section: 'assistant', path: '/', target: 'chat-launcher', title: 'Ask from any page',
+    body: 'This button is on every page. Click it to ask a question about the Corvalis rules without leaving what you are doing.' },
   { id: 'as-nav', section: 'assistant', path: '/assistant', target: 'nav-assistant', title: 'Ask the rules',
     body: 'Questions about leave, expenses, IT, onboarding or purchasing, answered from the Corvalis policies.' },
-  { id: 'as-box', section: 'assistant', path: '/assistant', target: 'ask-box', title: 'Type your question',
-    body: 'In English, French or Dutch, then press Enter. The answer cites the rule it comes from: click [1] to read it.' },
+  { id: 'as-history', section: 'assistant', path: '/assistant', target: 'my-questions', title: 'Your conversation',
+    body: 'Your questions on the right, the answers on the left with their source, and HR’s replies in green when you sent a question to HR.' },
   { id: 'as-examples', section: 'assistant', path: '/assistant', target: 'ask-examples', title: 'Not sure what to ask?',
-    body: 'Click an example to try it. You can even ask how many holiday days you have left.' },
-  { id: 'as-history', section: 'assistant', path: '/assistant', target: 'my-questions', title: 'My questions',
-    body: 'Everything you asked, and HR’s answers when you sent a question to HR.' },
+    body: 'Click a suggestion to try it. You can even ask how many holiday days you have left.' },
+  { id: 'as-box', section: 'assistant', path: '/assistant', target: 'ask-box', title: 'Type your question',
+    body: 'In English, French or Dutch, then press Enter. Click a small number [1] in the answer to read the exact rule.' },
 
   // HR inbox
   { id: 'hr-nav', section: 'hr-inbox', path: '/hr-inbox', target: 'nav-hr-inbox', only: 'hr', title: 'HR inbox',

@@ -149,10 +149,11 @@ const SECTIONS: Section[] = [
     path: '/assistant',
     intro: 'A local AI assistant that answers questions about the Corvalis policies: leave, expenses, IT, onboarding and purchasing.',
     steps: [
-      'Type your question in English, French or Dutch, then press Enter. You can also click one of the examples.',
+      'Click the round blue chat button at the bottom right of any page, or open “Ask the rules” in the menu.',
+      'Type your question in English, French or Dutch, then press Enter. You can also click one of the suggestions.',
       'The answer is short and comes only from the Corvalis policies. The small numbers [1] show where it comes from: click one to read the exact rule.',
       'Say if it helped with 👍 or 👎.',
-      'If the policies do not cover your question, or the answer did not help, click “Send to HR”. HR answers you on the same page, under “My questions”.',
+      'If the policies do not cover your question, or the answer did not help, click “Send to HR”. HR’s reply appears in the same conversation, in green.',
     ],
     tips: [
       'It also knows your own holiday balance: try “How many holiday days do I have left?”.',
