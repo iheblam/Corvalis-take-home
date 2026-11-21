@@ -27,13 +27,14 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Tests: 16 passing (workdays, leave rules, API flow, permissions, privacy)
 
 ## 2. Frontend: leave (1:00–2:00)
-- [ ] Layout, nav, user switcher (`X-User-Id`), API client + types
-- [ ] Home: who's out today / this week, my balance, my pending
-- [ ] Request leave: form + live preview (days, warnings, errors)
-- [ ] My requests (cancel)
-- [ ] Approvals (manager / HR): approve, reject with note, certificate received
-- [ ] Team calendar: month grid, filter by department / office
-- [ ] Who's available: date + department / office → available / absent / remote
+- [x] Layout, nav (Approvals tab + pending badge for managers/HR), user switcher (`X-User-Id`), Welcome screen ("who are you?" with engineer / manager / HR shortcuts), API client + `useApi` hook + types
+- [x] Overview: greeting, holiday balance card (carry-over warning), my upcoming leave, "out of the office this week" (my department / everyone), banner for pending approvals
+- [x] Request leave: type cards with policy hints, dates, note, live preview (working days, ⛔ errors, ℹ️ warnings), "Good to know" from leave.md
+- [x] My requests: upcoming / past / all, decision + note, certificate status, cancel
+- [x] Approvals: approve, refuse with required reason, "also away" hint per request; HR: medical certificates to collect (shown first)
+- [x] Team calendar: month grid, department / office filters, only-absent toggle, holidays & weekends shaded, pending = light colour
+- [x] Who's available: day + shortcuts, department / office / name filters → available / working from home / away (back on …)
+- [x] Tested in the browser as engineer → manager → HR (request, approve, refuse, calendar, availability, certificates) + phone width. No console errors.
 
 ## 3. Assistant: P1 (2:00–2:50)
 - [ ] Models: QuestionLog, HRTicket

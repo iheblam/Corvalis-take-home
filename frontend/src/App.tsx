@@ -1,23 +1,43 @@
-import { useEffect, useState } from 'react'
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
+import { Layout } from './components/Layout'
+import { ErrorBox, Loading } from './components/ui'
+import { canApprove, CurrentUserProvider, useCurrentUser } from './context/CurrentUser'
+import { Approvals } from './pages/Approvals'
+import { Availability } from './pages/Availability'
+import { MyRequests } from './pages/MyRequests'
+import { Overview } from './pages/Overview'
+import { RequestLeave } from './pages/RequestLeave'
+import { TeamCalendar } from './pages/TeamCalendar'
+import { Welcome } from './pages/Welcome'
 
-// Placeholder shell: checks that the frontend can reach the backend through the Vite proxy.
-// Replaced by the real layout and routes in the frontend step.
-export default function App() {
-  const [status, setStatus] = useState('checking…')
-
-  useEffect(() => {
-    fetch('/api/health')
-      .then((r) => (r.ok ? r.json() : Promise.reject(r.status)))
-      .then((d: { status: string }) => setStatus(d.status))
-      .catch(() => setStatus('backend not reachable'))
-  }, [])
+function Shell() {
+  const { user, loading, error } = useCurrentUser()
+  if (loading) return <div className="mx-auto max-w-xl p-10"><Loading /></div>
+  if (error) return <div className="mx-auto max-w-xl p-10"><ErrorBox message={error} onRetry={() => location.reload()} /></div>
+  if (!user) return <Welcome />
 
   return (
-    <main className="mx-auto max-w-xl p-10">
-      <h1 className="text-2xl font-semibold">Corvalis · Leave &amp; availability</h1>
-      <p className="mt-2 text-slate-600">
-        Backend: <span className="font-mono">{status}</span>
-      </p>
-    </main>
+    <Layout>
+      {/* key: every page reloads its data when you switch user */}
+      <Routes key={user.id}>
+        <Route path="/" element={<Overview />} />
+        <Route path="/request" element={<RequestLeave />} />
+        <Route path="/my-requests" element={<MyRequests />} />
+        <Route path="/calendar" element={<TeamCalendar />} />
+        <Route path="/availability" element={<Availability />} />
+        {canApprove(user) && <Route path="/approvals" element={<Approvals />} />}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </Layout>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <CurrentUserProvider>
+        <Shell />
+      </CurrentUserProvider>
+    </BrowserRouter>
   )
 }
