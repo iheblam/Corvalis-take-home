@@ -5,6 +5,8 @@ import { NoAccess } from './pages/NoAccess'
 import { ErrorBox, Loading } from './components/ui'
 import { canApprove, CurrentUserProvider, useCurrentUser } from './context/CurrentUser'
 import { Approvals } from './pages/Approvals'
+import { Assistant } from './pages/Assistant'
+import { HRInbox } from './pages/HRInbox'
 import { Availability } from './pages/Availability'
 import { MyRequests } from './pages/MyRequests'
 import { Overview } from './pages/Overview'
@@ -29,6 +31,8 @@ function Shell() {
         <Route path="/calendar" element={<TeamCalendar />} />
         <Route path="/availability" element={<Availability />} />
         <Route path="/approvals" element={canApprove(user) ? <Approvals /> : <NoAccess />} />
+        <Route path="/assistant" element={<Assistant />} />
+        <Route path="/hr-inbox" element={user.role === 'hr' ? <HRInbox /> : <NoAccess what="HR" />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

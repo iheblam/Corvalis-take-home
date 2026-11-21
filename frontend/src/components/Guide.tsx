@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router'
 import { canApprove, useUser } from '../context/CurrentUser'
 import { TYPE_COLOR } from '../labels'
 import {
-  ApproveIcon, CalendarIcon, CloseIcon, HelpIcon, HomeIcon, ListIcon, PeopleIcon, RequestIcon, SparkIcon, UserSwitchIcon,
+  ApproveIcon, CalendarIcon, ChatIcon, CloseIcon, HelpIcon, HomeIcon, InboxIcon, ListIcon, PeopleIcon, RequestIcon, SparkIcon, UserSwitchIcon,
 } from './icons'
 import { TourOverlay } from './Tour'
 import { SHORTCUTS, TOUR_STEPS, type TourStep } from './tourSteps'
@@ -143,6 +143,37 @@ const SECTIONS: Section[] = [
     ],
   },
   {
+    id: 'assistant',
+    icon: ChatIcon,
+    title: 'Ask the rules',
+    path: '/assistant',
+    intro: 'A local AI assistant that answers questions about the Corvalis policies: leave, expenses, IT, onboarding and purchasing.',
+    steps: [
+      'Type your question in English, French or Dutch, then press Enter. You can also click one of the examples.',
+      'The answer is short and comes only from the Corvalis policies. The small numbers [1] show where it comes from: click one to read the exact rule.',
+      'Say if it helped with 👍 or 👎.',
+      'If the policies do not cover your question, or the answer did not help, click “Send to HR”. HR answers you on the same page, under “My questions”.',
+    ],
+    tips: [
+      'It also knows your own holiday balance: try “How many holiday days do I have left?”.',
+      'It never invents a rule: when it does not know, it says so and offers to ask HR.',
+      'Everything runs on Corvalis computers: your questions are not sent to any outside service.',
+    ],
+  },
+  {
+    id: 'hr-inbox',
+    icon: InboxIcon,
+    title: 'HR inbox',
+    path: '/hr-inbox',
+    audience: 'HR',
+    intro: 'The questions the assistant could not settle. The number on the tab shows how many are waiting.',
+    steps: [
+      'The figures at the top show how many questions the assistant answered on its own, and how many came to HR.',
+      'Each question shows who asked, the assistant’s attempt with its sources, and the employee’s note.',
+      'Write your answer and click “Send answer”: the employee sees it under their question.',
+    ],
+  },
+  {
     id: 'help',
     icon: HelpIcon,
     title: 'Help & switching user',
@@ -234,7 +265,7 @@ function GuideModal({ section, onSection, onClose, onTour }: {
   const navigate = useNavigate()
   const dialogRef = useRef<HTMLDivElement>(null)
   const contentRef = useRef<HTMLDivElement>(null)
-  const sections = SECTIONS.filter((s) => s.id !== 'approvals' || canApprove(user))
+  const sections = SECTIONS.filter((s) => (s.id !== 'approvals' || canApprove(user)) && (s.id !== 'hr-inbox' || user.role === 'hr'))
   const index = Math.max(0, sections.findIndex((s) => s.id === section))
   const s = sections[index]
   const Icon = s.icon
@@ -328,7 +359,7 @@ function GuideModal({ section, onSection, onClose, onTour }: {
                 </button>
                 <p className="mt-6 mb-2 text-sm font-medium text-slate-500">Or show me how to…</p>
                 <div className="grid gap-2 sm:grid-cols-2">
-                  {SHORTCUTS.filter((q) => !q.only || canApprove(user)).map((q) => {
+                  {SHORTCUTS.filter((q) => !q.only || (q.only === 'hr' ? user.role === 'hr' : canApprove(user))).map((q) => {
                     const first = Array.isArray(q.steps) ? TOUR_STEPS.find((t) => t.id === q.steps[0])?.section : q.steps
                     const target = sections.find((x) => x.id === first)
                     const QIcon = target?.icon ?? HelpIcon

@@ -75,6 +75,24 @@ export const TOUR_STEPS: TourStep[] = [
   { id: 'ap-certs', section: 'approvals', path: '/approvals', target: 'certificates', only: 'hr', title: 'Medical certificates',
     body: 'HR: sick leave longer than one day needs a certificate. Tick it when it arrives.' },
 
+  // Ask the rules (P1)
+  { id: 'as-nav', section: 'assistant', path: '/assistant', target: 'nav-assistant', title: 'Ask the rules',
+    body: 'Questions about leave, expenses, IT, onboarding or purchasing, answered from the Corvalis policies.' },
+  { id: 'as-box', section: 'assistant', path: '/assistant', target: 'ask-box', title: 'Type your question',
+    body: 'In English, French or Dutch, then press Enter. The answer cites the rule it comes from: click [1] to read it.' },
+  { id: 'as-examples', section: 'assistant', path: '/assistant', target: 'ask-examples', title: 'Not sure what to ask?',
+    body: 'Click an example to try it. You can even ask how many holiday days you have left.' },
+  { id: 'as-history', section: 'assistant', path: '/assistant', target: 'my-questions', title: 'My questions',
+    body: 'Everything you asked, and HR’s answers when you sent a question to HR.' },
+
+  // HR inbox
+  { id: 'hr-nav', section: 'hr-inbox', path: '/hr-inbox', target: 'nav-hr-inbox', only: 'hr', title: 'HR inbox',
+    body: 'Questions the assistant could not settle. The number shows how many wait for HR.' },
+  { id: 'hr-stats', section: 'hr-inbox', path: '/hr-inbox', target: 'hr-stats', only: 'hr', title: 'What the assistant saves you',
+    body: 'How many questions it answered on its own, and how many came to HR.' },
+  { id: 'hr-ticket', section: 'hr-inbox', path: '/hr-inbox', target: 'hr-ticket', only: 'hr', title: 'Answer in one place',
+    body: 'See the question, the assistant’s attempt and its sources, then write your answer: the employee sees it right away.' },
+
   // Help
   { id: 'help-btn', section: 'help', path: '/', target: 'help', title: 'Forgot something?',
     body: 'Click Help any time to reopen this guide and replay any part of the tour.' },
@@ -83,7 +101,7 @@ export const TOUR_STEPS: TourStep[] = [
 ]
 
 /** Shortcut ("I want to…") → steps to show. A section id means all of its steps. */
-export const SHORTCUTS: { want: string; steps: string[] | string; only?: 'approver' }[] = [
+export const SHORTCUTS: { want: string; steps: string[] | string; only?: 'approver' | 'hr' }[] = [
   { want: 'See how many holiday days I have left', steps: ['ov-balance'] },
   { want: 'Take a day off or a holiday', steps: 'request' },
   { want: 'Work from home', steps: ['rq-nav', 'rq-remote', 'rq-dates', 'rq-check'] },
@@ -93,4 +111,6 @@ export const SHORTCUTS: { want: string; steps: string[] | string; only?: 'approv
   { want: 'See who is on holiday this month', steps: 'calendar' },
   { want: 'Plan a site visit with people who are in', steps: 'availability' },
   { want: "Approve my team's leave", steps: 'approvals', only: 'approver' },
+  { want: 'Ask a question about the company rules', steps: 'assistant' },
+  { want: "Answer employees' questions", steps: 'hr-inbox', only: 'hr' },
 ]

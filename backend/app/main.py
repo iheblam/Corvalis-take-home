@@ -8,7 +8,8 @@ from sqlmodel import Session
 
 from app.config import settings
 from app.db import create_db_and_tables, engine
-from app.routers import calendar, employees, leave
+from app.rag.assistant import warm_up_in_background
+from app.routers import assistant, calendar, employees, leave
 from app.seed import seed_if_empty
 
 
@@ -18,6 +19,8 @@ async def lifespan(_: FastAPI):
     if settings.seed_on_startup:
         with Session(engine) as session:
             seed_if_empty(session)
+    if settings.assistant_warm_up:
+        warm_up_in_background()  # embedding model + LLM, without blocking startup
     yield
 
 
@@ -59,6 +62,7 @@ async def readable_validation_error(_: Request, exc: RequestValidationError):
 app.include_router(employees.router)
 app.include_router(leave.router)
 app.include_router(calendar.router)
+app.include_router(assistant.router)
 
 
 @app.get("/api/health")

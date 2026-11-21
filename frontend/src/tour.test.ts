@@ -13,7 +13,7 @@ function sources(dir: string): string {
 }
 
 const code = sources(join(__dirname))
-const ROUTES = ['/', '/request', '/my-requests', '/calendar', '/availability', '/approvals']
+const ROUTES = ['/', '/request', '/my-requests', '/calendar', '/availability', '/approvals', '/assistant', '/hr-inbox']
 
 describe('guided tour', () => {
   it('every step targets an element that exists in the code', () => {
@@ -21,7 +21,7 @@ describe('guided tour', () => {
       const literal = code.includes(`data-tour="${step.target}"`)
       const typeCard = step.target.startsWith('type-') && code.includes('data-tour={`type-${t.type}`}')
       const navLink = step.target.startsWith('nav-') && code.includes('data-tour={`nav-$')
-      const approvalCard = step.target === 'approval-card' && code.includes("'approval-card'")
+      const approvalCard = ['approval-card', 'hr-ticket'].includes(step.target) && code.includes(`'${step.target}'`)
       expect(literal || typeCard || navLink || approvalCard, step.target).toBe(true)
     }
   })

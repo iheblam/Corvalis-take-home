@@ -1,11 +1,11 @@
 import { useEffect, useState, type ComponentType, type ReactNode } from 'react'
 import { NavLink } from 'react-router'
 import { api } from '../api/client'
-import type { Employee, LeaveRequest } from '../api/types'
+import type { AssistantStats, Employee, LeaveRequest } from '../api/types'
 import { canApprove, useCurrentUser, useUser } from '../context/CurrentUser'
 import { DEPARTMENT_LABEL } from '../labels'
 import { useGuide } from './Guide'
-import { ApproveIcon, CalendarIcon, HelpIcon, HomeIcon, ListIcon, PeopleIcon, RequestIcon } from './icons'
+import { ApproveIcon, CalendarIcon, ChatIcon, HelpIcon, HomeIcon, InboxIcon, ListIcon, PeopleIcon, RequestIcon } from './icons'
 import { Avatar } from './ui'
 
 /** Pages call this after approving/rejecting so the nav counter refreshes. */
@@ -22,6 +22,24 @@ function usePendingCount(user: Employee) {
     load()
     window.addEventListener('approvals-changed', load)
     return () => window.removeEventListener('approvals-changed', load)
+  }, [user])
+  return count
+}
+
+/** Called after a question is sent to / answered by HR so the HR inbox counter refreshes. */
+export const notifyTicketsChanged = () => window.dispatchEvent(new Event('tickets-changed'))
+
+function useOpenTickets(user: Employee) {
+  const [count, setCount] = useState(0)
+  useEffect(() => {
+    if (user.role !== 'hr') return
+    const load = () =>
+      api<AssistantStats>('/assistant/stats')
+        .then((s) => setCount(s.open_tickets))
+        .catch(() => setCount(0))
+    load()
+    window.addEventListener('tickets-changed', load)
+    return () => window.removeEventListener('tickets-changed', load)
   }, [user])
   return count
 }
@@ -59,6 +77,7 @@ function UserSwitcher() {
 export function Layout({ children }: { children: ReactNode }) {
   const user = useUser()
   const pending = usePendingCount(user)
+  const openTickets = useOpenTickets(user)
 
   const { openGuide } = useGuide()
 
@@ -68,8 +87,10 @@ export function Layout({ children }: { children: ReactNode }) {
     { to: '/my-requests', label: 'My requests', icon: ListIcon },
     { to: '/calendar', label: 'Team calendar', icon: CalendarIcon },
     { to: '/availability', label: "Who's available?", icon: PeopleIcon },
+    { to: '/assistant', label: 'Ask the rules', icon: ChatIcon },
   ]
   if (canApprove(user)) links.push({ to: '/approvals', label: 'Approvals', icon: ApproveIcon, badge: pending })
+  if (user.role === 'hr') links.push({ to: '/hr-inbox', label: 'HR inbox', icon: InboxIcon, badge: openTickets })
 
   return (
     <div className="min-h-screen">

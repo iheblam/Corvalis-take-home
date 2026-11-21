@@ -68,12 +68,20 @@ ANONYMOUS = [
     ("post", "/api/leave-requests/1/certificate"),
     ("get", "/api/calendar?start=2026-12-01&end=2026-12-31"),
     ("get", "/api/availability?date=2026-12-01"),
+    ("post", "/api/assistant/ask"),
+    ("get", "/api/questions"),
+    ("post", "/api/questions/1/feedback"),
+    ("post", "/api/questions/1/escalate"),
+    ("get", "/api/hr-tickets"),
+    ("post", "/api/hr-tickets/1/answer"),
+    ("get", "/api/assistant/stats"),
 ]
 
 
 @pytest.mark.parametrize("method,url", ANONYMOUS)
 def test_anonymous_calls_are_refused(client, people, method, url):
-    body = {"type": "annual", "start_date": "2026-12-07", "end_date": "2026-12-07", "note": "x"}
+    body = {"type": "annual", "start_date": "2026-12-07", "end_date": "2026-12-07", "note": "x",
+            "question": "Can I take a taxi?", "helpful": True, "answer": "Yes, at night."}
     r = client.request(method.upper(), url, json=body if method == "post" else None)
     assert r.status_code == 401, (method, url, r.status_code)
 

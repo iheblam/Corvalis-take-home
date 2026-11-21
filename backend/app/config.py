@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     # Local AI assistant (Ollama). The app works without it; only the assistant page needs it.
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "qwen3.5:4b"
+    ollama_think: bool = False
+    ollama_timeout_s: float = 120
+    ollama_keep_alive: str = "30m"
     docs_dir: Path = PROJECT_DIR / "docs"
 
     # Retrieval (fastembed, CPU). Multilingual: questions in FR/NL/EN, policies in EN.
@@ -28,6 +31,7 @@ class Settings(BaseSettings):
     retrieval_top_k: int = 3
     rerank_candidates: int = 5
     retrieval_min_score: float = 0.75
+    assistant_warm_up: bool = True  # load models when the server starts
 
 
 settings = Settings()

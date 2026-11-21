@@ -100,3 +100,55 @@ export interface Availability {
   remote: EmployeeBrief[]
   absent: { employee: EmployeeBrief; type: VisibleType; status: LeaveStatus; back_on: string | null }[]
 }
+
+// ---------------------------------------------------------------- assistant (P1)
+
+export interface Source {
+  n: number
+  id: string
+  doc: string
+  doc_title: string
+  section: string
+  text: string
+}
+
+export interface Ticket {
+  id: number
+  status: 'open' | 'answered'
+  employee_note: string | null
+  hr_answer: string | null
+  answered_by_name: string | null
+  created_at: string
+  answered_at: string | null
+}
+
+export interface Question {
+  id: number
+  employee: EmployeeBrief
+  question: string
+  answer: string | null
+  answered: boolean
+  reason: 'not_found' | 'offline' | null
+  language: 'en' | 'fr' | 'nl'
+  sources: Source[]
+  helpful: boolean | null
+  latency_ms: number | null
+  created_at: string
+  ticket: Ticket | null
+}
+
+export interface AssistantStatus {
+  ollama: boolean
+  model: string
+  model_available: boolean
+  retrieval_ready: boolean
+}
+
+export interface AssistantStats {
+  questions: number
+  answered_by_assistant: number
+  sent_to_hr: number
+  open_tickets: number
+  helpful: number
+  not_helpful: number
+}

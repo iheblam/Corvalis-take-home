@@ -13,6 +13,9 @@ from sqlmodel import Session, SQLModel, select
 from app.models import (
     Department,
     Employee,
+    HRTicket,
+    QuestionLog,
+    TicketStatus,
     LeaveAllowance,
     LeaveRequest,
     LeaveStatus,
@@ -258,7 +261,78 @@ def seed(session: Session, today: date | None = None) -> None:
     s, end = b.block(today + timedelta(days=50), 10)
     b.add(e, LeaveType.unpaid, s, end, LeaveStatus.pending, comment="Travelling for three weeks")
 
+    seed_questions(session, people, today)
     session.commit()
+
+
+# (employee key, days ago, language, question, answer or None, cited chunk ids, helpful, ticket)
+# ticket = None | (employee note, HR answer or None, days after the question)
+QUESTIONS = [
+    ("s2", 9, "fr", "Combien de jours de congé ai-je par an ?",
+     "Vous avez droit à 20 jours de congés payés par an [1]. Les jours non pris peuvent être reportés jusqu'au 31 mars de l'année suivante [1].",
+     ["leave.md#annual-leave"], True, None),
+    ("s1", 8, "en", "Can I expense a beer with a client?",
+     "No, alcohol is never reimbursed [1].", ["expenses.md#meals"], True, None),
+    ("b5", 8, "nl", "Hoeveel dagen per week mag ik thuiswerken?",
+     "U mag tot twee dagen per week thuiswerken, in overleg met uw manager; dinsdag en donderdag zijn teamdagen op kantoor [1].",
+     ["leave.md#remote-work"], True, None),
+    ("b4", 7, "en", "Do I need the VPN at the train station?",
+     "Yes, the VPN must be switched on when you work from a public network such as a station [1].",
+     ["it-security.md#vpn"], None, None),
+    ("d2", 6, "fr", "Qui approuve une note de frais de 600 euros ?",
+     "Votre manager direct l'approuve, et comme elle dépasse 500 euros, le directeur financier doit aussi l'approuver [1].",
+     ["expenses.md#approval"], True, None),
+    ("s15", 5, "en", "When is my probation review?",
+     "Your probation review takes place after three months, with your manager and HR [1].",
+     ["onboarding.md#probation-review"], None, None),
+    ("b3", 5, "en", "Can I install Spotify on my laptop?",
+     "Only software from the company catalogue may be installed; ask the IT desk for anything else [1].",
+     ["it-security.md#software-installation"], False,
+     ("Is Spotify in the catalogue? I listen to music while drawing.",
+      "Spotify is not in the catalogue. The IT desk can install the approved music app for you: just open a ticket.", 1)),
+    ("b13", 4, "en", "Is there a bike allowance for commuting?", None, [], None,
+     (None, "Yes: Corvalis pays the legal bike allowance per kilometre between home and the office. Send your monthly kilometres to HR before the 5th.", 1)),
+    ("s16", 3, "fr", "Combien de jours de congé de paternité ai-je ?", None, [], None,
+     ("Naissance prévue en février.", None, 0)),
+    ("it1", 2, "en", "Can I bring my dog to the office on Fridays?", None, [], None, (None, None, 0)),
+    ("b12", 1, "nl", "Krijg ik maaltijdcheques?", None, [], None, ("Ik ben nieuw sinds deze maand.", None, 0)),
+]
+
+NOT_FOUND = {
+    "en": "I couldn't find this in the Corvalis policies. You can send your question to HR and they will answer you here.",
+    "fr": "Je n'ai pas trouvé cette information dans les règles de Corvalis. Vous pouvez envoyer votre question aux RH : la réponse arrivera ici.",
+    "nl": "Ik heb dit niet gevonden in de regels van Corvalis. U kunt uw vraag naar HR sturen; het antwoord verschijnt hier.",
+}
+
+
+def seed_questions(session: Session, people: dict[str, Employee], today: date) -> None:
+    import json
+
+    from app.config import settings
+    from app.rag.chunking import load_corpus
+
+    chunks = {c.id: c for c in load_corpus(settings.docs_dir)}
+    hr = people["hr1"]
+    for key, days_ago, lang, question, answer, cited, helpful, ticket in QUESTIONS:
+        asked = datetime.combine(today - timedelta(days=days_ago), datetime.min.time(), tzinfo=UTC).replace(hour=10)
+        sources = [{"n": i, "id": cid, "doc": chunks[cid].doc, "doc_title": chunks[cid].doc_title,
+                    "section": chunks[cid].section, "text": chunks[cid].text} for i, cid in enumerate(cited, start=1)]
+        log = QuestionLog(
+            employee_id=people[key].id, question=question, answer=answer or NOT_FOUND[lang],
+            answered=answer is not None, reason=None if answer else "not_found", language=lang,
+            sources=json.dumps(sources, ensure_ascii=False), helpful=helpful, latency_ms=3800 if answer else 900,
+            created_at=asked,
+        )
+        session.add(log)
+        session.flush()
+        if ticket:
+            note, hr_answer, after = ticket
+            session.add(HRTicket(
+                question_log_id=log.id, employee_note=note, created_at=asked + timedelta(minutes=2),
+                status=TicketStatus.answered if hr_answer else TicketStatus.open, hr_answer=hr_answer,
+                answered_by_id=hr.id if hr_answer else None,
+                answered_at=asked + timedelta(days=after, hours=3) if hr_answer else None,
+            ))
 
 
 def seed_if_empty(session: Session) -> bool:

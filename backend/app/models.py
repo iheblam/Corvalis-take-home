@@ -91,3 +91,40 @@ class PublicHoliday(SQLModel, table=True):
     date: dt.date = Field(unique=True, index=True)
     name: str
     is_replacement_day: bool = False  # replaces a holiday that fell on a Sunday
+
+
+# ---------------------------------------------------------------- P1: questions about internal rules
+
+
+class TicketStatus(StrEnum):
+    open = "open"
+    answered = "answered"
+
+
+class QuestionLog(SQLModel, table=True):
+    """Every question asked to the assistant, with what it answered (the HR 'FAQ' of real questions)."""
+
+    id: int | None = Field(default=None, primary_key=True)
+    employee_id: int = Field(foreign_key="employee.id", index=True)
+    question: str
+    answer: str | None = None
+    answered: bool = False  # False = the documents do not cover it, or the assistant was offline
+    reason: str | None = None  # "not_found" | "offline" when not answered
+    sources: str = "[]"  # JSON list of {"id", "doc", "section"}
+    language: str = "en"
+    helpful: bool | None = None  # employee feedback
+    latency_ms: int | None = None
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC), index=True)
+
+
+class HRTicket(SQLModel, table=True):
+    """A question the assistant could not settle, sent to HR. One ticket per question."""
+
+    id: int | None = Field(default=None, primary_key=True)
+    question_log_id: int = Field(foreign_key="questionlog.id", unique=True)
+    status: TicketStatus = Field(default=TicketStatus.open, index=True)
+    employee_note: str | None = None
+    hr_answer: str | None = None
+    answered_by_id: int | None = Field(default=None, foreign_key="employee.id")
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    answered_at: datetime | None = None

@@ -126,3 +126,72 @@ class AvailabilityRead(BaseModel):
     available: list[EmployeeBrief]
     remote: list[EmployeeBrief]
     absent: list[AbsentPerson]
+
+
+# ---------------------------------------------------------------- assistant (P1)
+
+
+class AskIn(BaseModel):
+    question: str = Field(min_length=3, max_length=500)
+
+
+class SourceRead(BaseModel):
+    n: int
+    id: str
+    doc: str
+    doc_title: str
+    section: str
+    text: str
+
+
+class TicketRead(BaseModel):
+    id: int
+    status: str
+    employee_note: str | None
+    hr_answer: str | None
+    answered_by_name: str | None
+    created_at: datetime
+    answered_at: datetime | None
+
+
+class QuestionRead(BaseModel):
+    id: int
+    employee: EmployeeBrief
+    question: str
+    answer: str | None
+    answered: bool
+    reason: str | None
+    language: str
+    sources: list[SourceRead]
+    helpful: bool | None
+    latency_ms: int | None
+    created_at: datetime
+    ticket: TicketRead | None
+
+
+class FeedbackIn(BaseModel):
+    helpful: bool
+
+
+class EscalateIn(BaseModel):
+    note: str | None = Field(default=None, max_length=500)
+
+
+class HRAnswerIn(BaseModel):
+    answer: str = Field(min_length=2, max_length=2000)
+
+
+class AssistantStatus(BaseModel):
+    ollama: bool
+    model: str
+    model_available: bool
+    retrieval_ready: bool
+
+
+class AssistantStats(BaseModel):
+    questions: int
+    answered_by_assistant: int
+    sent_to_hr: int
+    open_tickets: int
+    helpful: int
+    not_helpful: int

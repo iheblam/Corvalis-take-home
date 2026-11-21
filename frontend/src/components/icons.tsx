@@ -42,3 +42,9 @@ export const SparkIcon = (p: P) => (
 export const CloseIcon = (p: P) => (
   <Svg {...p}><path d="M6 6l12 12M18 6 6 18" /></Svg>
 )
+export const ChatIcon = (p: P) => (
+  <Svg {...p}><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3h11A2.5 2.5 0 0 1 20 5.5v8a2.5 2.5 0 0 1-2.5 2.5H10l-4.5 4v-4h0A1.5 1.5 0 0 1 4 14.5z" /><path d="M8.5 8.5h7M8.5 11.5h4.5" /></Svg>
+)
+export const InboxIcon = (p: P) => (
+  <Svg {...p}><path d="M3 13.5 5.5 5h13L21 13.5V19a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><path d="M3 13.5h5l1.5 2.5h5l1.5-2.5h5" /></Svg>
+)

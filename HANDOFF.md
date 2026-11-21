@@ -55,12 +55,14 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Evaluation (`app/rag/evaluate.py`): 50 labelled questions (21 EN / 18 FR / 11 NL) + 12 off-topic; Hit@1/3, MRR, latency, answerability AUC; 6 modes × 2 embedding models + reranker candidate sweep
 - [x] **Report: `reports/rag-evaluation.md` → dense `multilingual-e5-large`, no reranker: 100% top-1 in EN/FR/NL, ~46 ms; BM25 fails across languages (FR 33%, NL 18%); hybrid hurts on this small corpus; reranker best at 5 candidates (lighter alternative)**
 - [x] Tests: `tests/test_rag.py` (20 tests: chunker edge cases, tokenizer, BM25, every mode, accuracy regression ≥95% per language, off-topic gate) → backend total 102 passing
-- [ ] Models: QuestionLog, HRTicket
-- [ ] Generation: prompt with the 3 extracts + sources, answer in the question's language, "not in the documents" → offer HR ticket; Ollama call
-- [ ] Endpoints: ask, feedback, my questions, escalate, HR tickets list / answer
-- [ ] Pages: Ask the rules (+ My questions), HR inbox
-- [ ] Graceful message when Ollama is not running
-- [ ] Seed: ~10 questions, 3 open + 2 answered tickets
+- [x] Models: QuestionLog (question, answer, sources, language, reason, feedback, latency), HRTicket (one per question)
+- [x] Generation (`app/rag/assistant.py`, `llm.py`): Ollama `qwen3.5:4b`, thinking off (3-5 s vs 44-62 s), structured JSON output `{found, answer, citations}`, reply in the question's language (regex EN/FR/NL detector, 62/62), 2 gates (retrieval score, then LLM), employee's own balance in context (link with P8), warm-up at startup
+- [x] Endpoints: ask, my questions, feedback, escalate, HR tickets list / answer, HR stats, status
+- [x] Pages: "Ask the rules" (examples in 3 languages, citations, sources, 👍/👎, Send to HR, My questions with HR replies), "HR inbox" (stats, to answer / answered); nav badges; guide + tour sections
+- [x] Offline: clear message, question kept, can be sent to HR
+- [x] Seed: 11 questions (EN/FR/NL), 3 open + 2 answered tickets
+- [x] Tests: 128 backend (incl. 19 assistant tests with fake LLM), 13 frontend; end-to-end with the real model: 48/50 answered with the right source, 12/12 off-topic refused, ~5 s (report §9)
+- [x] Browser: French question answered with source; off-topic → Send to HR with note → HR inbox → answer visible to the employee
 
 ## 4. Finish (2:50–3:30)
 - [ ] Empty / loading / error states, responsive check

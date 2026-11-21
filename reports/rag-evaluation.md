@@ -134,3 +134,22 @@ Everything stays configurable in `.env`. On a machine with little disk or RAM, u
 - **The 0.75 cut-off was chosen on the same questions it is judged on.** It should be checked against real questions once people use the assistant (the question log will provide them).
 - **Timings are from one laptop.** The order between configurations is what matters, not the exact milliseconds.
 - **Retrieval only.** Answer quality (no invented rules, correct citations, replying in the question's language) is evaluated in the next step, with the LLM.
+
+## 9. End to end, with the LLM (`qwen3.5:4b`, thinking off)
+
+The whole assistant, run on the 50 answerable and 12 off-topic questions (`uv run python -m app.rag.evaluate_answers`, details in `backend/eval/answers.json`):
+
+| Check | Result |
+|---|---|
+| Answerable questions answered, citing the right section | **48 / 50** |
+| Replies in the language of the question (EN / FR / NL) | **48 / 48** answered |
+| Off-topic questions refused (offer to ask HR, nothing invented) | **12 / 12** |
+| Time per answer | ~5 s (clearly off-topic: 0.05 s, the LLM is not called) |
+
+Choices made while testing:
+- **Thinking mode off:** same answers, but 3–5 s instead of 44–62 s.
+- **Structured output** (JSON schema `{found, answer, citations}`): the model sometimes wrote "the documents say nothing about pets" instead of `NOT_FOUND`, and the app counted that as an answer. With the schema, the decision no longer depends on wording.
+- **No name in the personal context:** with the name, the 4B model answered "Camille peut…" instead of "vous pouvez…".
+- **Two gates:** the retrieval score drops clearly unrelated questions; the LLM drops near-topic ones ("wifi password", "paternity leave").
+
+Known limit: 2 questions are still refused although the rule exists: "beer with a client" (the policy says *alcohol*) and "what time on my first day" (*welcomed at 9 o'clock*). The model is cautious when the wording differs a lot. It errs on the safe side: the employee is offered HR rather than given a wrong rule.
