@@ -45,6 +45,7 @@ export function Overview() {
       {toApprove.data && toApprove.data.length > 0 && (
         <Link
           to="/approvals"
+          data-tour="approvals-banner"
           className="mb-6 flex items-center justify-between rounded-xl border border-amber-200 bg-amber-50 px-5 py-4 text-amber-900 hover:bg-amber-100"
         >
           <span>
@@ -57,7 +58,8 @@ export function Overview() {
 
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-6">
-          <BalanceCard employeeId={user.id} />
+          <div data-tour="balance"><BalanceCard employeeId={user.id} /></div>
+          <div data-tour="upcoming">
           <Card>
             <div className="flex items-center justify-between">
               <h2 className="text-sm font-medium text-slate-500">My upcoming leave</h2>
@@ -78,8 +80,9 @@ export function Overview() {
               ))}
             </ul>
           </Card>
+          </div>
         </div>
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-2" data-tour="out-of-office">
           <WhoIsAway userDepartment={user.department} today={today} />
         </div>
       </div>

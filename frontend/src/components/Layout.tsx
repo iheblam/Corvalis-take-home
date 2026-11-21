@@ -30,7 +30,7 @@ function UserSwitcher() {
   const { user, employees, switchUser } = useCurrentUser()
   const roleTag = (e: Employee) => (e.role === 'hr' ? ' · HR' : e.direct_reports > 0 ? ' · Manager' : '')
   return (
-    <label className="flex items-center gap-2 text-sm">
+    <label className="flex items-center gap-2 rounded-lg text-sm" data-tour="user-switcher">
       <span className="hidden text-slate-400 lg:inline">Signed in as</span>
       {user && <Avatar name={user.full_name} size="sm" />}
       <select
@@ -84,6 +84,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <div className="flex items-center gap-3">
             <button
               onClick={() => openGuide()}
+              data-tour="help"
               title="How to use the app"
               aria-label="Help: how to use the app"
               className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white"
@@ -99,6 +100,7 @@ export function Layout({ children }: { children: ReactNode }) {
             <NavLink
               key={l.to}
               to={l.to}
+              data-tour={`nav-${l.to === '/' ? 'overview' : l.to.slice(1)}`}
               end={l.to === '/'}
               className={({ isActive }) =>
                 `flex items-center gap-2 border-b-2 px-3 py-2.5 text-sm font-medium whitespace-nowrap transition ${

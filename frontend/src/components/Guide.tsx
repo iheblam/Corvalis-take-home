@@ -5,6 +5,8 @@ import { TYPE_COLOR } from '../labels'
 import {
   ApproveIcon, CalendarIcon, CloseIcon, HelpIcon, HomeIcon, ListIcon, PeopleIcon, RequestIcon, SparkIcon, UserSwitchIcon,
 } from './icons'
+import { TourOverlay } from './Tour'
+import { SHORTCUTS, TOUR_STEPS, type TourStep } from './tourSteps'
 import { Button, StatusBadge, TypeBadge } from './ui'
 
 const SEEN_KEY = 'corvalis.guide.v1.seen'
@@ -21,25 +23,13 @@ interface Section {
   tips?: string[]
 }
 
-const QUICK: { want: string; section: string }[] = [
-  { want: 'See how many holiday days I have left', section: 'overview' },
-  { want: 'Take a day off or a holiday', section: 'request' },
-  { want: 'Work from home', section: 'request' },
-  { want: 'Report that I am sick', section: 'request' },
-  { want: 'Check if my request was approved', section: 'my-requests' },
-  { want: 'Cancel a request', section: 'my-requests' },
-  { want: 'See who is on holiday this month', section: 'calendar' },
-  { want: 'Plan a site visit with people who are in', section: 'availability' },
-  { want: "Approve my team's leave", section: 'approvals' },
-]
-
 const SECTIONS: Section[] = [
   {
     id: 'welcome',
     icon: SparkIcon,
     title: 'Welcome',
     intro:
-      'This app replaces leave emails and the HR Excel file. Ask for leave, follow your requests, and see who is in or out, all in one place. Pick what you want to do below, or click Next for a short tour.',
+      'This app replaces leave emails and the HR Excel file. Ask for leave, follow your requests, and see who is in or out, all in one place.',
   },
   {
     id: 'overview',
@@ -171,12 +161,23 @@ const SECTIONS: Section[] = [
 
 // ------------------------------------------------------------------ context
 
-const GuideCtx = createContext<{ openGuide: (section?: string) => void } | null>(null)
+/** 'all' = full tour, a section id = that section, a list = those step ids. */
+export type TourSpec = 'all' | string | string[]
+
+const GuideCtx = createContext<{ openGuide: (section?: string) => void; startTour: (spec: TourSpec) => void } | null>(null)
 
 export function useGuide() {
   const v = useContext(GuideCtx)
   if (!v) throw new Error('useGuide outside GuideProvider')
   return v
+}
+
+function markSeen() {
+  try {
+    localStorage.setItem(SEEN_KEY, '1')
+  } catch {
+    /* ignore */
+  }
 }
 
 function hasSeen() {
@@ -188,27 +189,47 @@ function hasSeen() {
 }
 
 export function GuideProvider({ children }: { children: ReactNode }) {
+  const user = useUser()
   const [section, setSection] = useState<string | null>(() => (hasSeen() ? null : 'welcome'))
+  const [tour, setTour] = useState<TourStep[] | null>(null)
   const openGuide = useCallback((s = 'welcome') => setSection(s), [])
+
+  const startTour = useCallback(
+    (spec: TourSpec) => {
+      const allowed = (st: TourStep) =>
+        !st.only || (st.only === 'approver' ? canApprove(user) : user.role === 'hr')
+      const steps = Array.isArray(spec)
+        ? spec.map((id) => TOUR_STEPS.find((st) => st.id === id)).filter((st): st is TourStep => !!st)
+        : TOUR_STEPS.filter((st) => !st.shortcutOnly && (spec === 'all' || st.section === spec))
+      const visible = steps.filter(allowed)
+      if (visible.length === 0) return
+      markSeen()
+      setSection(null)
+      setTour(visible)
+    },
+    [user],
+  )
   const close = () => {
     setSection(null)
-    try {
-      localStorage.setItem(SEEN_KEY, '1')
-    } catch {
-      /* ignore */
-    }
+    markSeen()
   }
   return (
-    <GuideCtx.Provider value={{ openGuide }}>
+    <GuideCtx.Provider value={{ openGuide, startTour }}>
       {children}
-      {section && <GuideModal section={section} onSection={setSection} onClose={close} />}
+      {section && <GuideModal section={section} onSection={setSection} onClose={close} onTour={startTour} />}
+      {tour && <TourOverlay key={tour.map((t) => t.id).join()} steps={tour} onClose={() => setTour(null)} />}
     </GuideCtx.Provider>
   )
 }
 
 // ------------------------------------------------------------------ modal
 
-function GuideModal({ section, onSection, onClose }: { section: string; onSection: (s: string) => void; onClose: () => void }) {
+function GuideModal({ section, onSection, onClose, onTour }: {
+  section: string
+  onSection: (s: string) => void
+  onClose: () => void
+  onTour: (spec: TourSpec) => void
+}) {
   const user = useUser()
   const navigate = useNavigate()
   const dialogRef = useRef<HTMLDivElement>(null)
@@ -297,17 +318,26 @@ function GuideModal({ section, onSection, onClose }: { section: string; onSectio
 
             {s.id === 'welcome' && (
               <div className="mt-6">
-                <p className="mb-2 text-sm font-medium text-slate-500">I want to…</p>
+                <button onClick={() => onTour('all')}
+                  className="flex w-full items-center gap-4 rounded-xl bg-blue-600 p-4 text-left text-white shadow-sm transition hover:bg-blue-700">
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/20 text-lg">▶</span>
+                  <span className="flex-1">
+                    <span className="block font-semibold">Show me around</span>
+                    <span className="block text-sm text-blue-100">A 2-minute guided tour: we point at each part of the screen.</span>
+                  </span>
+                </button>
+                <p className="mt-6 mb-2 text-sm font-medium text-slate-500">Or show me how to…</p>
                 <div className="grid gap-2 sm:grid-cols-2">
-                  {QUICK.filter((q) => sections.some((x) => x.id === q.section)).map((q) => {
-                    const target = sections.find((x) => x.id === q.section)!
-                    const QIcon = target.icon
+                  {SHORTCUTS.filter((q) => !q.only || canApprove(user)).map((q) => {
+                    const first = Array.isArray(q.steps) ? TOUR_STEPS.find((t) => t.id === q.steps[0])?.section : q.steps
+                    const target = sections.find((x) => x.id === first)
+                    const QIcon = target?.icon ?? HelpIcon
                     return (
-                      <button key={q.want} onClick={() => onSection(q.section)}
-                        className="flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-left text-sm transition hover:border-blue-400 hover:bg-blue-50/50">
+                      <button key={q.want} onClick={() => onTour(q.steps)}
+                        className="group flex items-center gap-3 rounded-lg border border-slate-200 p-3 text-left text-sm transition hover:border-blue-400 hover:bg-blue-50/50">
                         <QIcon size={18} className="shrink-0 text-blue-600" />
                         <span className="flex-1">{q.want}</span>
-                        <span className="text-xs text-slate-400">{target.title} →</span>
+                        <span className="text-xs text-slate-400 group-hover:text-blue-600">Show me →</span>
                       </button>
                     )
                   })}
@@ -337,10 +367,15 @@ function GuideModal({ section, onSection, onClose }: { section: string; onSectio
               </div>
             )}
 
-            {s.path && (
-              <Button variant="secondary" className="mt-6" onClick={() => go(s.path!)}>
-                Go to {s.title} →
-              </Button>
+            {s.id !== 'welcome' && (
+              <div className="mt-6 flex flex-wrap gap-2">
+                <Button onClick={() => onTour(s.id)}>▶ Show me on screen</Button>
+                {s.path && (
+                  <Button variant="secondary" onClick={() => go(s.path!)}>
+                    Go to {s.title}
+                  </Button>
+                )}
+              </div>
             )}
           </div>
         </div>
@@ -354,7 +389,7 @@ function GuideModal({ section, onSection, onClose }: { section: string; onSectio
           <div className="flex gap-2">
             {index > 0 && <Button variant="ghost" onClick={() => onSection(sections[index - 1].id)}>Back</Button>}
             {index < sections.length - 1 ? (
-              <Button onClick={() => onSection(sections[index + 1].id)}>{index === 0 ? 'Start the tour' : 'Next'}</Button>
+              <Button variant={index === 0 ? 'secondary' : 'primary'} onClick={() => onSection(sections[index + 1].id)}>{index === 0 ? 'Read the guide' : 'Next'}</Button>
             ) : (
               <Button onClick={onClose}>Got it, let’s start</Button>
             )}

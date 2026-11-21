@@ -74,12 +74,13 @@ export function RequestLeave() {
       <PageHeader title="Request leave" subtitle="Choose what kind of absence, then the dates. We check the rules for you." />
       <div className="grid gap-6 lg:grid-cols-3">
         <form onSubmit={submit} className="space-y-6 lg:col-span-2">
-          <Card>
+          <div data-tour="leave-types"><Card>
             <h2 className="mb-3 font-semibold">1. What kind of absence?</h2>
             <div className="grid gap-3 sm:grid-cols-2">
               {TYPES.map((t) => (
                 <label
                   key={t.type}
+                  data-tour={`type-${t.type}`}
                   className={`flex cursor-pointer gap-3 rounded-lg border p-3 transition ${
                     type === t.type ? 'border-blue-500 bg-blue-50 ring-1 ring-blue-500' : 'border-slate-200 hover:border-slate-300'
                   }`}
@@ -93,9 +94,9 @@ export function RequestLeave() {
                 </label>
               ))}
             </div>
-          </Card>
+          </Card></div>
 
-          <Card>
+          <div data-tour="leave-dates"><Card>
             <h2 className="mb-3 font-semibold">2. When?</h2>
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
@@ -115,9 +116,9 @@ export function RequestLeave() {
                 placeholder={type === 'annual' ? 'e.g. Family holiday' : ''}
                 className="rounded-lg border border-slate-300 px-3 py-2 font-normal shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none" />
             </label>
-          </Card>
+          </Card></div>
 
-          <Card className={preview && !preview.ok ? 'border-rose-200' : ''}>
+          <div data-tour="leave-check"><Card className={preview && !preview.ok ? 'border-rose-200' : ''}>
             <h2 className="mb-3 font-semibold">3. Check and send</h2>
             {previewError && <ErrorBox message={previewError} />}
             {preview && (
@@ -143,11 +144,11 @@ export function RequestLeave() {
                 <span className="text-sm text-slate-500">{user.manager_name} will be asked to approve it.</span>
               )}
             </div>
-          </Card>
+          </Card></div>
         </form>
 
         <aside className="space-y-6">
-          <BalanceCard employeeId={user.id} year={Number(start.slice(0, 4)) || undefined} />
+          <div data-tour="leave-balance"><BalanceCard employeeId={user.id} year={Number(start.slice(0, 4)) || undefined} /></div>
           <Card>
             <h2 className="text-sm font-medium text-slate-500">Good to know</h2>
             <ul className="mt-2 list-disc space-y-1.5 pl-5 text-sm text-slate-700">

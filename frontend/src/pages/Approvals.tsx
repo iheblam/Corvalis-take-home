@@ -28,14 +28,16 @@ export function Approvals() {
         {todo.error && <ErrorBox message={todo.error} onRetry={todo.reload} />}
         {todo.data?.length === 0 && <Empty>🎉 Nothing to approve. You're all caught up.</Empty>}
         <div className="space-y-3">
-          {todo.data?.map((r) => (
-            <ApprovalCard key={r.id} request={r} onDone={() => { todo.reload(); notifyApprovalsChanged() }} />
+          {todo.data?.map((r, i) => (
+            <div key={r.id} data-tour={i === 0 ? 'approval-card' : undefined}>
+              <ApprovalCard request={r} onDone={() => { todo.reload(); notifyApprovalsChanged() }} />
+            </div>
           ))}
         </div>
       </section>
 
       {user.role === 'hr' && (
-        <section className="order-first mb-10">
+        <section className="order-first mb-10" data-tour="certificates">
           <h2 className="mb-1 font-semibold">Medical certificates to collect</h2>
           <p className="mb-3 text-sm text-slate-600">Sick leave of more than one day needs a certificate from the second day.</p>
           {sick.loading && <Loading />}

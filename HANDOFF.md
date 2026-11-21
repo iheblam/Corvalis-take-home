@@ -35,6 +35,7 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Team calendar: month grid, department / office filters, only-absent toggle, holidays & weekends shaded, pending = light colour
 - [x] Who's available: day + shortcuts, department / office / name filters → available / working from home / away (back on …)
 - [x] "How to use the app" guide: opens once automatically (remembered in the browser), then any time from the ? Help icon in the header. "I want to…" quick finder + one section per page (steps, badges/legend, tips, "Go to" button); same icons in the nav and in the guide; keyboard ←/→/Esc; full-screen on phones
+- [x] Spotlight tour (`Tour.tsx`, `tourSteps.ts`): "Show me around" (25 steps for HR, fewer for others), "Show me on screen" per section, and every "I want to…" shortcut opens the right page and circles the real element (`data-tour` markers) while the rest is dimmed + blurred; steps missing on screen (e.g. nothing to approve) are skipped. Verified all 25 steps find their element.
 - [x] Tested in the browser as engineer → manager → HR (request, approve, refuse, calendar, availability, certificates) + phone width. No console errors.
 
 ## 3. Assistant: P1 (2:00–2:50)

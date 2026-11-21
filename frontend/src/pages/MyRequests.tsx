@@ -43,7 +43,7 @@ export function MyRequests() {
       )}
       {actionError && <div className="mb-4"><ErrorBox message={actionError} /></div>}
 
-      <div className="mb-4 flex gap-1 rounded-lg bg-slate-100 p-1 text-sm sm:inline-flex">
+      <div className="mb-4 flex gap-1 rounded-lg bg-slate-100 p-1 text-sm sm:inline-flex" data-tour="request-tabs">
         {(['upcoming', 'past', 'all'] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)}
             className={`flex-1 rounded-md px-4 py-1.5 capitalize ${tab === t ? 'bg-white font-medium shadow-sm' : 'text-slate-600'}`}>
@@ -56,7 +56,7 @@ export function MyRequests() {
       {error && <ErrorBox message={error} onRetry={reload} />}
       {data && rows.length === 0 && <Empty>No requests here.</Empty>}
 
-      <div className="space-y-3">
+      <div className="space-y-3" data-tour="request-list">
         {rows.map((r) => (
           <Card key={r.id} className="!p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">

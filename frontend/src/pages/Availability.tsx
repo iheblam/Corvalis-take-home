@@ -38,7 +38,7 @@ export function Availability() {
     <>
       <PageHeader title="Who's available?" subtitle="Planning a site visit or a meeting? Pick a day to see who is in." />
 
-      <Card className="mb-6 !p-4">
+      <div data-tour="availability-filters" className="mb-6"><Card className="!p-4">
         <div className="flex flex-wrap items-end gap-4">
           <label className="flex flex-col gap-1 text-sm font-medium text-slate-700">
             Day
@@ -63,7 +63,7 @@ export function Availability() {
               className="min-w-40 rounded-lg border border-slate-300 px-3 py-2 font-normal shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none" />
           </label>
         </div>
-      </Card>
+      </Card></div>
 
       {loading && !data && <Loading />}
       {error && <ErrorBox message={error} onRetry={reload} />}
@@ -75,7 +75,7 @@ export function Availability() {
               {data.holiday_name ? `${data.holiday_name}: the office is closed.` : 'This is a weekend day.'}
             </div>
           )}
-          <div className={`grid gap-6 md:grid-cols-3 ${loading ? 'opacity-60' : ''}`}>
+          <div data-tour="availability-columns" className={`grid gap-6 md:grid-cols-3 ${loading ? 'opacity-60' : ''}`}>
             <Column title="Available" tone="emerald" people={data.available.filter(match)} hint="In the office or on site." />
             <Column title="Working from home" tone="violet" people={data.remote.filter(match)} hint="Reachable, but not on site." />
             <Card className="!p-0">

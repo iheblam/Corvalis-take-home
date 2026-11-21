@@ -30,7 +30,7 @@ export function TeamCalendar() {
     <>
       <PageHeader title="Team calendar" subtitle="Who is away, and when. Light colours are not approved yet." />
 
-      <Card className="mb-4 !p-4">
+      <div data-tour="calendar-filters" className="mb-4"><Card className="!p-4">
         <div className="flex flex-wrap items-end gap-4">
           <div className="flex items-center gap-1">
             <Button variant="secondary" className="!px-3" aria-label="Previous month" onClick={() => setMonth(addMonths(month, -1))}>←</Button>
@@ -47,20 +47,20 @@ export function TeamCalendar() {
             Only people with an absence
           </label>
         </div>
-        <div className="mt-4 flex flex-wrap gap-4 text-xs text-slate-600">
+        <div className="mt-4 flex flex-wrap gap-4 rounded-md text-xs text-slate-600" data-tour="calendar-legend">
           {LEGEND.map((t) => (
             <span key={t} className="flex items-center gap-1.5"><span className={`h-3 w-3 rounded-sm ${TYPE_COLOR[t].dot}`} />{TYPE_LABEL[t]}</span>
           ))}
           <span className="flex items-center gap-1.5"><span className="h-3 w-3 rounded-sm bg-slate-200" />Weekend / public holiday</span>
         </div>
-      </Card>
+      </Card></div>
 
       {loading && !data && <Loading />}
       {error && <ErrorBox message={error} onRetry={reload} />}
       {data && rows.length === 0 && <Empty>Nobody to show with these filters.</Empty>}
 
       {data && rows.length > 0 && (
-        <div className={`overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm ${loading ? 'opacity-60' : ''}`}>
+        <div data-tour="calendar-grid" className={`overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm ${loading ? 'opacity-60' : ''}`}>
           <table className="w-full border-collapse text-xs">
             <thead>
               <tr>
