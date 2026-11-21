@@ -153,6 +153,7 @@ const SECTIONS: Section[] = [
       'Type your question in English, French or Dutch, then press Enter. You can also click one of the suggestions.',
       'The answer is short and comes only from the Corvalis policies. The small numbers [1] show where it comes from: click one to read the exact rule.',
       'Say if it helped with 👍 or 👎.',
+      'Each conversation is saved. Use “+ New” to start another one and “End conversation” when you are done; old ones stay in the Conversations list.',
       'If the policies do not cover your question, or the answer did not help, click “Send to HR”. HR’s reply appears in the same conversation, in green.',
     ],
     tips: [

@@ -64,6 +64,7 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Tests: 128 backend (incl. 19 assistant tests with fake LLM), 13 frontend; end-to-end with the real model: 48/50 answered with the right source, 12/12 off-topic refused, ~5 s (report §9)
 - [x] Browser: French question answered with source; off-topic → Send to HR with note → HR inbox → answer visible to the employee
 - [x] Chat UI: floating chat button bottom right on every page (pulse, online dot, wiggle + dismissible "👋 Hi Camille! Ask me…" teaser, HR-reply badge) opening a chat panel; "Ask the rules" kept in the navbar as a full page; shared conversation (ChatContext): message bubbles, typing indicator, citation chips + sources, 👍/👎, Send to HR inline, HR replies as green bubbles, suggestion chips, auto-growing input; tour step for the button
+- [x] Chat sessions: `ChatSession` table (title from the first question, created / last activity / ended), every question saved in its conversation; start (ends the previous one, reuses an empty one), end (confirm), reopen any past conversation; ended ones are read-only but still receive HR replies; unread-HR-reply badge on the chat button and in the list; in-place migration adds `session_id` and moves older questions into an "Earlier questions" conversation; 6 new tests (backend: 138)
 
 ## 4. Finish (2:50–3:30)
 - [ ] Empty / loading / error states, responsive check

@@ -6,6 +6,7 @@ import { useUser } from '../../context/CurrentUser'
 import { AnswerText, Sources } from '../QuestionCard'
 import { BotIcon, SendIcon, ThumbDownIcon, ThumbUpIcon } from '../icons'
 import { Avatar } from '../ui'
+import { EndedFooter, SessionBar } from './Conversations'
 
 export const SUGGESTIONS = [
   'How many holiday days do I have left?',
@@ -37,7 +38,7 @@ export function BotAvatar({ size = 32 }: { size?: number }) {
 
 /** The conversation + composer. `compact` = inside the floating panel. */
 export function ChatThread({ compact = false }: { compact?: boolean }) {
-  const { items, loading, asking, ask, retry } = useChat()
+  const { items, loading, asking, ask, retry, current } = useChat()
   const user = useUser()
   const scrollRef = useRef<HTMLDivElement>(null)
 
@@ -51,6 +52,7 @@ export function ChatThread({ compact = false }: { compact?: boolean }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col bg-slate-50">
+      <SessionBar compact={compact} />
       <div ref={scrollRef} className={`min-h-0 flex-1 space-y-4 overflow-y-auto ${compact ? 'px-3 py-4' : 'px-4 py-6 sm:px-6'}`} data-tour="my-questions">
         <AssistantBubble>
           <p>
@@ -66,7 +68,11 @@ export function ChatThread({ compact = false }: { compact?: boolean }) {
         ))}
       </div>
 
-      <Composer compact={compact} asking={asking} onSend={ask} showSuggestions={!compact || items.length === 0} />
+      {current && !current.active ? (
+        <EndedFooter />
+      ) : (
+        <Composer compact={compact} asking={asking} onSend={ask} showSuggestions={!compact || items.length === 0} />
+      )}
     </div>
   )
 }

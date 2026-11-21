@@ -156,6 +156,7 @@ class TicketRead(BaseModel):
 
 class QuestionRead(BaseModel):
     id: int
+    session_id: int | None = None
     employee: EmployeeBrief
     question: str
     answer: str | None
@@ -195,3 +196,23 @@ class AssistantStats(BaseModel):
     open_tickets: int
     helpful: int
     not_helpful: int
+
+
+class AskInSession(AskIn):
+    session_id: int | None = None  # None = continue the active conversation (or start one)
+
+
+class ChatSessionRead(BaseModel):
+    id: int
+    title: str
+    created_at: datetime
+    last_activity_at: datetime
+    ended_at: datetime | None
+    active: bool
+    questions: int
+    waiting_for_hr: int
+    hr_replies: int
+
+
+class ChatSessionDetail(ChatSessionRead):
+    messages: list[QuestionRead]

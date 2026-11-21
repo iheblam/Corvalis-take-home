@@ -12,6 +12,7 @@ from sqlmodel import Session, SQLModel, select
 
 from app.models import (
     Department,
+    ChatSession,
     Employee,
     HRTicket,
     QuestionLog,
@@ -317,8 +318,13 @@ def seed_questions(session: Session, people: dict[str, Employee], today: date) -
         asked = datetime.combine(today - timedelta(days=days_ago), datetime.min.time(), tzinfo=UTC).replace(hour=10)
         sources = [{"n": i, "id": cid, "doc": chunks[cid].doc, "doc_title": chunks[cid].doc_title,
                     "section": chunks[cid].section, "text": chunks[cid].text} for i, cid in enumerate(cited, start=1)]
+        # One saved conversation per seeded question; the oldest ones are ended.
+        chat = ChatSession(employee_id=people[key].id, title=question[:60], created_at=asked, last_activity_at=asked,
+                           ended_at=asked + timedelta(minutes=5) if days_ago >= 5 else None)
+        session.add(chat)
+        session.flush()
         log = QuestionLog(
-            employee_id=people[key].id, question=question, answer=answer or NOT_FOUND[lang],
+            employee_id=people[key].id, session_id=chat.id, question=question, answer=answer or NOT_FOUND[lang],
             answered=answer is not None, reason=None if answer else "not_found", language=lang,
             sources=json.dumps(sources, ensure_ascii=False), helpful=helpful, latency_ms=3800 if answer else 900,
             created_at=asked,

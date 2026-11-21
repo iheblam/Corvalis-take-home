@@ -101,11 +101,23 @@ class TicketStatus(StrEnum):
     answered = "answered"
 
 
+class ChatSession(SQLModel, table=True):
+    """One conversation with the assistant. Ended sessions are read-only but still receive HR replies."""
+
+    id: int | None = Field(default=None, primary_key=True)
+    employee_id: int = Field(foreign_key="employee.id", index=True)
+    title: str | None = None  # the first question, shortened
+    created_at: datetime = Field(default_factory=lambda: datetime.now(UTC))
+    last_activity_at: datetime = Field(default_factory=lambda: datetime.now(UTC), index=True)
+    ended_at: datetime | None = None
+
+
 class QuestionLog(SQLModel, table=True):
     """Every question asked to the assistant, with what it answered (the HR 'FAQ' of real questions)."""
 
     id: int | None = Field(default=None, primary_key=True)
     employee_id: int = Field(foreign_key="employee.id", index=True)
+    session_id: int | None = Field(default=None, foreign_key="chatsession.id", index=True)
     question: str
     answer: str | None = None
     answered: bool = False  # False = the documents do not cover it, or the assistant was offline

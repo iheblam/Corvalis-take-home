@@ -2,8 +2,9 @@ import { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router'
 import { useChat } from '../../context/ChatContext'
 import { useUser } from '../../context/CurrentUser'
-import { ChatIcon, CloseIcon, ExpandIcon } from '../icons'
+import { ChatIcon, CloseIcon, ExpandIcon, ListIcon } from '../icons'
 import { BotAvatar, ChatThread } from './ChatThread'
+import { ConversationList } from './Conversations'
 
 const TEASER_KEY = 'corvalis.chatTeaser.dismissed'
 
@@ -18,10 +19,11 @@ function teaserDismissed() {
 /** Floating "ask the rules" button, bottom right of every page, opening a chat panel. */
 export function ChatWidget() {
   const { pathname } = useLocation()
-  const { online, items } = useChat()
+  const { online, unreadHR } = useChat()
   const user = useUser()
   const [open, setOpen] = useState(false)
   const [teaser, setTeaser] = useState(false)
+  const [view, setView] = useState<'chat' | 'list'>('chat')
 
   // Pop the little message after a moment, once, until the user dismisses it or opens the chat.
   useEffect(() => {
@@ -54,7 +56,6 @@ export function ChatWidget() {
 
   if (pathname === '/assistant') return null // the full page is already open
 
-  const hrReplies = items.filter((it) => it.kind === 'question' && it.q.ticket?.hr_answer).length
 
   return (
     <>
@@ -73,6 +74,12 @@ export function ChatWidget() {
                 {online === false ? 'Offline: questions go to HR' : 'Answers from the company rules · EN · FR · NL'}
               </p>
             </div>
+            <button onClick={() => setView((v) => (v === 'list' ? 'chat' : 'list'))} aria-label="Conversations" title="Conversations"
+              aria-pressed={view === 'list'}
+              className={`relative rounded-md p-1.5 hover:bg-white/15 hover:text-white ${view === 'list' ? 'bg-white/20 text-white' : 'text-blue-100'}`}>
+              <ListIcon size={18} />
+              {unreadHR > 0 && <span className="absolute top-0.5 right-0.5 h-2 w-2 rounded-full bg-rose-400" />}
+            </button>
             <Link to="/assistant" onClick={() => setOpen(false)} aria-label="Open full page" title="Open full page"
               className="rounded-md p-1.5 text-blue-100 hover:bg-white/15 hover:text-white">
               <ExpandIcon size={18} />
@@ -82,7 +89,7 @@ export function ChatWidget() {
             </button>
           </div>
           <div className="min-h-0 flex-1">
-            <ChatThread compact />
+            {view === 'list' ? <ConversationList onPicked={() => setView('chat')} /> : <ChatThread compact />}
           </div>
         </div>
       )}
@@ -113,9 +120,9 @@ export function ChatWidget() {
           {!open && (
             <span className={`absolute top-1 right-1 h-3.5 w-3.5 rounded-full ring-2 ring-white ${online === false ? 'bg-amber-400' : 'bg-emerald-400'}`} aria-hidden />
           )}
-          {!open && hrReplies > 0 && (
+          {!open && unreadHR > 0 && (
             <span className="absolute -top-1 -left-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[11px] font-bold ring-2 ring-white" title="Answers from HR">
-              {hrReplies}
+              {unreadHR}
             </span>
           )}
           <span className="pointer-events-none absolute right-full mr-3 hidden rounded-lg bg-slate-900 px-2.5 py-1 text-xs whitespace-nowrap opacity-0 transition group-hover:opacity-100 sm:block">

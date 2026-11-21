@@ -75,6 +75,10 @@ ANONYMOUS = [
     ("get", "/api/hr-tickets"),
     ("post", "/api/hr-tickets/1/answer"),
     ("get", "/api/assistant/stats"),
+    ("get", "/api/chat-sessions"),
+    ("post", "/api/chat-sessions"),
+    ("get", "/api/chat-sessions/1"),
+    ("post", "/api/chat-sessions/1/end"),
 ]
 
 

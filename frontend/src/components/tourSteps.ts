@@ -80,6 +80,8 @@ export const TOUR_STEPS: TourStep[] = [
     body: 'This button is on every page. Click it to ask a question about the Corvalis rules without leaving what you are doing.' },
   { id: 'as-nav', section: 'assistant', path: '/assistant', target: 'nav-assistant', title: 'Ask the rules',
     body: 'Questions about leave, expenses, IT, onboarding or purchasing, answered from the Corvalis policies.' },
+  { id: 'as-sessions', section: 'assistant', path: '/assistant', target: 'chat-sessions', title: 'Saved conversations',
+    body: 'Every conversation is saved. Start a new one, reopen an old one, and see at a glance where HR has replied.' },
   { id: 'as-history', section: 'assistant', path: '/assistant', target: 'my-questions', title: 'Your conversation',
     body: 'Your questions on the right, the answers on the left with their source, and HR’s replies in green when you sent a question to HR.' },
   { id: 'as-examples', section: 'assistant', path: '/assistant', target: 'ask-examples', title: 'Not sure what to ask?',

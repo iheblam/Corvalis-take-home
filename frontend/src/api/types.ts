@@ -124,6 +124,7 @@ export interface Ticket {
 
 export interface Question {
   id: number
+  session_id: number | null
   employee: EmployeeBrief
   question: string
   answer: string | null
@@ -151,4 +152,20 @@ export interface AssistantStats {
   open_tickets: number
   helpful: number
   not_helpful: number
+}
+
+export interface ChatSession {
+  id: number
+  title: string
+  created_at: string
+  last_activity_at: string
+  ended_at: string | null
+  active: boolean
+  questions: number
+  waiting_for_hr: number
+  hr_replies: number
+}
+
+export interface ChatSessionDetail extends ChatSession {
+  messages: Question[]
 }

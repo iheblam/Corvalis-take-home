@@ -232,3 +232,91 @@ def test_seeded_questions_and_tickets(empty_session):
     assert sum(t.status == TicketStatus.open for t in tickets) == 3
     assert sum(t.status == TicketStatus.answered for t in tickets) == 2
     assert all(q.sources != "[]" for q in logs if q.answered)
+
+
+# ------------------------------------------------------------------ chat sessions
+
+
+def test_first_question_starts_a_conversation_titled_after_it(client, people, fake_answer):
+    fake_answer()
+    alice = people["alice"]
+    q = ask(client, alice, "Can I expense a beer?").json()
+    chats = client.get("/api/chat-sessions", headers=as_user(alice)).json()
+    assert len(chats) == 1 and chats[0]["title"] == "Can I expense a beer?" and chats[0]["active"]
+    assert q["session_id"] == chats[0]["id"] and chats[0]["questions"] == 1
+    ask(client, alice, "And a taxi at night?")  # same active conversation
+    assert client.get("/api/chat-sessions", headers=as_user(alice)).json()[0]["questions"] == 2
+
+
+def test_start_end_and_reopen_a_conversation(client, people, fake_answer):
+    fake_answer()
+    alice, h = people["alice"], as_user(people["alice"])
+    first = ask(client, alice).json()["session_id"]
+    new = client.post("/api/chat-sessions", headers=h).json()
+    assert new["id"] != first and new["active"] and new["title"] == "New conversation"
+    # Starting again while the new one is still empty does not create blank conversations.
+    assert client.post("/api/chat-sessions", headers=h).json()["id"] == new["id"]
+
+    chats = {c["id"]: c for c in client.get("/api/chat-sessions", headers=h).json()}
+    assert chats[first]["active"] is False  # the previous one was ended, not deleted
+
+    ask(client, alice, "Second conversation question")
+    assert client.post(f"/api/chat-sessions/{new['id']}/end", headers=h).json()["active"] is False
+    assert client.post(f"/api/chat-sessions/{new['id']}/end", headers=h).status_code == 409
+
+    detail = client.get(f"/api/chat-sessions/{first}", headers=h).json()  # saved messages are still there
+    assert [m["question"] for m in detail["messages"]] == ["Can I expense a beer?"]
+
+
+def test_cannot_ask_in_an_ended_conversation(client, people, fake_answer):
+    fake_answer()
+    h = as_user(people["alice"])
+    sid = ask(client, people["alice"]).json()["session_id"]
+    client.post(f"/api/chat-sessions/{sid}/end", headers=h)
+    r = client.post("/api/assistant/ask", json={"question": "One more?", "session_id": sid}, headers=h)
+    assert r.status_code == 409 and "Start a new one" in r.json()["detail"]
+    # Without a session id, a new conversation is started automatically.
+    q = client.post("/api/assistant/ask", json={"question": "One more?"}, headers=h).json()
+    assert q["session_id"] != sid
+
+
+def test_conversations_are_private(client, people, fake_answer):
+    fake_answer()
+    sid = ask(client, people["alice"]).json()["session_id"]
+    bob = as_user(people["bob"])
+    assert client.get(f"/api/chat-sessions/{sid}", headers=bob).status_code == 403
+    assert client.post(f"/api/chat-sessions/{sid}/end", headers=bob).status_code == 403
+    assert client.post("/api/assistant/ask", json={"question": "Hello there", "session_id": sid}, headers=bob).status_code == 403
+    assert client.get("/api/chat-sessions", headers=bob).json() == []
+    assert client.get("/api/chat-sessions/999", headers=bob).status_code == 404
+    assert client.get("/api/chat-sessions").status_code == 401
+
+
+def test_hr_reply_reaches_an_ended_conversation(client, people, fake_answer):
+    fake_answer(answered=False)
+    alice, hr = as_user(people["alice"]), as_user(people["hr"])
+    q = ask(client, people["alice"], "Paternity leave?").json()
+    client.post(f"/api/questions/{q['id']}/escalate", json={}, headers=alice)
+    client.post(f"/api/chat-sessions/{q['session_id']}/end", headers=alice)
+    waiting = client.get("/api/chat-sessions", headers=alice).json()[0]
+    assert waiting["waiting_for_hr"] == 1 and waiting["hr_replies"] == 0
+
+    tid = client.get("/api/hr-tickets", headers=hr).json()[0]["ticket"]["id"]
+    client.post(f"/api/hr-tickets/{tid}/answer", json={"answer": "15 days."}, headers=hr)
+
+    chat = client.get(f"/api/chat-sessions/{q['session_id']}", headers=alice).json()
+    assert chat["active"] is False and chat["hr_replies"] == 1 and chat["waiting_for_hr"] == 0
+    assert chat["messages"][0]["ticket"]["hr_answer"] == "15 days."
+
+
+def test_migration_puts_old_questions_in_an_ended_conversation(session, people):
+    from app.db import migrate
+    from app.models import ChatSession
+
+    session.add(QuestionLog(employee_id=people["alice"].id, question="Old question?", answer="Old answer."))
+    session.commit()
+    migrate(session.get_bind())
+    session.expire_all()
+    chat = session.exec(select(ChatSession)).one()
+    assert chat.title == "Earlier questions" and chat.ended_at is not None
+    assert session.exec(select(QuestionLog)).one().session_id == chat.id
