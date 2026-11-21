@@ -22,8 +22,10 @@ add its folder to your PATH once, then CLOSE AND REOPEN the terminal:
     uv --version
 Or use its full path instead of "uv":
     & "$env:APPDATA\Python\Python314\Scripts\uv.exe" --version
-Or, if the backend virtual environment is already active (prompt starts with "(corvalis-leave-backend)"):
-    python -m uvicorn app.main:app --reload
+Or run the project's own Python directly (from the backend folder, after "uv sync" once):
+    .\.venv\Scripts\python.exe -m uvicorn app.main:app --reload
+  Do NOT use plain "python": on a machine with Python 3.14 it is the 3.14 launcher, which fails with
+  "No Python at '...cpython-3.12...python.exe'" (check with: Get-Command python).
 
 Install the backend libraries (Python 3.12 is installed automatically):
     cd backend
