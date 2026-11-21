@@ -40,7 +40,7 @@ def test_reject_needs_a_reason(client, people):
 
 def test_invalid_request_returns_readable_error(client, people):
     r = create(client, people["alice"], type="remote", start_date="2026-11-24", end_date="2026-11-24")
-    assert r.status_code == 400 and "team days" in r.json()["detail"]
+    assert r.status_code == 400 and "Tuesday is a team day" in r.json()["detail"]
 
 
 def test_sick_leave_is_hidden_from_colleagues(client, people):
