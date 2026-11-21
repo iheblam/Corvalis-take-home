@@ -16,8 +16,14 @@ You need:  uv (Python manager)  ·  Node.js 20+  ·  Ollama (for the assistant)
 Install uv if it is missing:
     py -m pip install --user uv
 
-If "uv" is not recognised afterwards, use its full path instead of "uv":
+If "uv" is not recognised afterwards ("Le terme «uv» n'est pas reconnu" / "not recognized"),
+add its folder to your PATH once, then CLOSE AND REOPEN the terminal:
+    [Environment]::SetEnvironmentVariable("Path", [Environment]::GetEnvironmentVariable("Path", "User") + ";$env:APPDATA\Python\Python314\Scripts", "User")
+    uv --version
+Or use its full path instead of "uv":
     & "$env:APPDATA\Python\Python314\Scripts\uv.exe" --version
+Or, if the backend virtual environment is already active (prompt starts with "(corvalis-leave-backend)"):
+    python -m uvicorn app.main:app --reload
 
 Install the backend libraries (Python 3.12 is installed automatically):
     cd backend
