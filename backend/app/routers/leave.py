@@ -110,6 +110,8 @@ def get_request(request_id: int, session: SessionDep, user: CurrentUser):
 
 def _decide(request_id: int, session: SessionDep, user: CurrentUser, new_status: LeaveStatus, note: str | None):
     req, owner = _load(session, request_id)
+    if req.employee_id == user.id:
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "You cannot decide on your own request.")
     if not can_decide(user, req, owner):
         raise HTTPException(
             status.HTTP_403_FORBIDDEN, "Only the employee's manager or HR can decide on this request."
@@ -141,6 +143,9 @@ def reject(request_id: int, body: DecisionIn, session: SessionDep, user: Current
 @router.post("/{request_id}/cancel", response_model=LeaveRequestRead)
 def cancel(request_id: int, session: SessionDep, user: CurrentUser):
     req, _ = _load(session, request_id)
+    if req.employee_id != user.id and user.role != Role.hr:
+        # Don't reveal anything about other people's requests.
+        raise HTTPException(status.HTTP_403_FORBIDDEN, "You can only cancel your own requests.")
     reason = can_cancel(user, req)
     if reason:
         raise HTTPException(status.HTTP_409_CONFLICT, reason)

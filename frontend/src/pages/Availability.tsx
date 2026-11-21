@@ -1,10 +1,11 @@
 import { addDays, format, isWeekend, nextMonday, parseISO } from 'date-fns'
-import { useState } from 'react'
 import { useApi } from '../api/client'
 import type { Availability as AvailabilityData, Department, EmployeeBrief, Office } from '../api/types'
-import { Avatar, Card, ErrorBox, Loading, PageHeader, Select, TypeBadge } from '../components/ui'
+import { Avatar, Button, Card, ErrorBox, Loading, PageHeader, SearchInput, Select, TypeBadge } from '../components/ui'
 import { useUser } from '../context/CurrentUser'
+import { matchesSearch, parseDay, parseDepartment, parseOffice } from '../filters'
 import { DEPARTMENT_LABEL, fmtDay, isoDate, OFFICE_LABEL } from '../labels'
+import { useUrlFilters } from '../useUrlFilters'
 
 function nextWorkday(d: Date) {
   let x = d
@@ -15,18 +16,22 @@ function nextWorkday(d: Date) {
 export function Availability() {
   const user = useUser()
   const today = new Date()
-  const [day, setDay] = useState(isoDate(nextWorkday(today)))
-  const [department, setDepartment] = useState<Department | ''>(user.department)
-  const [office, setOffice] = useState<Office | ''>('')
-  const [search, setSearch] = useState('')
+  const { params: url, set } = useUrlFilters()
+  const day = parseDay(url.get('date')) ?? isoDate(nextWorkday(today))
+  const department = parseDepartment(url.get('department'), user.department)
+  const office = parseOffice(url.get('office'))
+  const search = url.get('q') ?? ''
+  const setDay = (d: string) => set({ date: parseDay(d) })
+  const setDepartment = (d: Department | '') => set({ department: d || 'all' })
+  const setOffice = (o: Office | '') => set({ office: o })
+  const filtered = department !== user.department || office || search
 
   const params = new URLSearchParams({ date: day })
   if (department) params.set('department', department)
   if (office) params.set('office', office)
-  const { data, error, loading, reload } = useApi<AvailabilityData>(day ? `/availability?${params}` : null)
+  const { data, error, loading, reload } = useApi<AvailabilityData>(`/availability?${params}`)
 
-  const match = (e: EmployeeBrief) =>
-    !search || `${e.full_name} ${e.job_title}`.toLowerCase().includes(search.toLowerCase())
+  const match = (e: EmployeeBrief) => matchesSearch(e, search)
 
   const shortcuts = [
     { label: 'Today', d: today },
@@ -57,11 +62,12 @@ export function Availability() {
             options={[{ value: '', label: 'All departments' }, ...Object.entries(DEPARTMENT_LABEL).map(([v, l]) => ({ value: v as Department, label: l }))]} />
           <Select label="Office" value={office} onChange={setOffice}
             options={[{ value: '', label: 'Both offices' }, ...Object.entries(OFFICE_LABEL).map(([v, l]) => ({ value: v as Office, label: l }))]} />
-          <label className="flex flex-1 flex-col gap-1 text-sm font-medium text-slate-700">
-            Find someone
-            <input value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Name or job title"
-              className="min-w-40 rounded-lg border border-slate-300 px-3 py-2 font-normal shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none" />
-          </label>
+          <SearchInput value={search} onChange={(q) => set({ q })} />
+          {filtered && (
+            <Button variant="ghost" className="mb-0.5" onClick={() => set({ department: null, office: null, q: null })}>
+              Clear filters
+            </Button>
+          )}
         </div>
       </Card></div>
 

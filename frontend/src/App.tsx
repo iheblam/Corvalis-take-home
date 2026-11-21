@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router'
 import { GuideProvider } from './components/Guide'
 import { Layout } from './components/Layout'
+import { NoAccess } from './pages/NoAccess'
 import { ErrorBox, Loading } from './components/ui'
 import { canApprove, CurrentUserProvider, useCurrentUser } from './context/CurrentUser'
 import { Approvals } from './pages/Approvals'
@@ -27,7 +28,7 @@ function Shell() {
         <Route path="/my-requests" element={<MyRequests />} />
         <Route path="/calendar" element={<TeamCalendar />} />
         <Route path="/availability" element={<Availability />} />
-        {canApprove(user) && <Route path="/approvals" element={<Approvals />} />}
+        <Route path="/approvals" element={canApprove(user) ? <Approvals /> : <NoAccess />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

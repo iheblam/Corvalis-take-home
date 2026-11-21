@@ -1,5 +1,7 @@
 from datetime import date
 
+from sqlmodel import select
+
 from app.models import LeaveAllowance, LeaveRequest, LeaveStatus, LeaveType
 from app.services.leave_rules import check_request, compute_balance
 
@@ -62,3 +64,37 @@ def test_overlap_and_past_dates(session, people):
 def test_sick_leave_needs_certificate_from_day_two(session, people):
     c = check_request(session, people["alice"], LeaveType.sick, date(2026, 11, 16), date(2026, 11, 17))
     assert c.ok and c.certificate_required and c.working_days == 2
+
+
+def test_request_across_new_year_uses_both_allowances(session, people):
+    alice = people["alice"]
+    c = check_request(session, alice, LeaveType.annual, date(2026, 12, 28), date(2027, 1, 8))
+    assert c.ok and c.working_days == 9  # 1 Jan is a holiday
+    assert any("next year's allowance" in w for w in c.warnings)
+
+
+def test_unused_carry_over_expires_after_31_march(session, people):
+    alice = people["alice"]
+    allowance = session.exec(select(LeaveAllowance).where(LeaveAllowance.employee_id == alice.id)).one()
+    allowance.carried_over_days = 3
+    session.add(allowance)
+    session.commit()
+    b = compute_balance(session, alice.id, 2026)  # today = Nov 2026, so the deadline has passed
+    assert (b.carried_over_expired, b.available_days) == (3, 20)
+
+
+def test_sick_leave_in_the_future_only_warns(session, people):
+    c = check_request(session, people["alice"], LeaveType.sick, date(2026, 11, 20), date(2026, 11, 20))
+    assert c.ok and not c.certificate_required
+    assert any("first day of illness" in w for w in c.warnings)
+
+
+def test_nobody_decides_on_their_own_request(session, people):
+    from app.services.leave_rules import can_decide
+
+    req = LeaveRequest(id=1, employee_id=people["hr"].id, type=LeaveType.annual,
+                       start_date=date(2026, 12, 1), end_date=date(2026, 12, 1), working_days=1)
+    assert not can_decide(people["hr"], req, people["hr"])
+    req.employee_id = people["alice"].id
+    assert can_decide(people["manager"], req, people["alice"])
+    assert not can_decide(people["bob"], req, people["alice"])

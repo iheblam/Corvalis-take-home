@@ -102,6 +102,31 @@ export function Avatar({ name, size = 'md' }: { name: string; size?: 'sm' | 'md'
   )
 }
 
+/** Name / job search box, shared by the calendar and "Who's available?". */
+export function SearchInput({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  return (
+    <label className="flex min-w-40 flex-1 flex-col gap-1 text-sm font-medium text-slate-700">
+      Find someone
+      <span className="relative">
+        <input
+          type="text"
+          role="searchbox"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="Name, job, office…"
+          className="w-full rounded-lg border border-slate-300 px-3 py-2 pr-8 font-normal shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-200 focus:outline-none"
+        />
+        {value && (
+          <button type="button" aria-label="Clear search" onClick={() => onChange('')}
+            className="absolute top-1/2 right-2 -translate-y-1/2 rounded px-1 text-slate-400 hover:text-slate-700">
+            ×
+          </button>
+        )}
+      </span>
+    </label>
+  )
+}
+
 export function Select<T extends string>({
   label,
   value,

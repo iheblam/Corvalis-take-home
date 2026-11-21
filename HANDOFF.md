@@ -38,6 +38,15 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Spotlight tour (`Tour.tsx`, `tourSteps.ts`): "Show me around" (25 steps for HR, fewer for others), "Show me on screen" per section, and every "I want to…" shortcut opens the right page and circles the real element (`data-tour` markers) while the rest is dimmed + blurred; steps missing on screen (e.g. nothing to approve) are skipped. Verified all 25 steps find their element.
 - [x] Tested in the browser as engineer → manager → HR (request, approve, refuse, calendar, availability, certificates) + phone width. No console errors.
 
+## 2b. Quality gate before the assistant (validated)
+- [x] Backend hardening: cancel/decide on someone else's request → 403 (was 409); readable 422 messages; security headers (nosniff, DENY framing, no-referrer, no-store on /api); CORS limited to the frontend origin, GET/POST, `Content-Type` + `X-User-Id`; requests > 2 years ahead refused
+- [x] pytest: **82 tests**: employees, leave (create/preview/list scopes/filters/approve/reject/cancel/certificate), calendar & availability, holidays, security (anonymous → 401 on every protected route, cross-role → 403, injection strings → 422, CORS, headers), seed integrity (org chart, no overlaps, remote rules, nobody over allowance), persistence after restart (file DB reopened)
+- [x] Bugs found by the new tests and fixed: "Thursday and Tuesday" word order; `?department=__proto__` accepted by the URL parser
+- [x] Search & filters: accent-insensitive multi-word search (name, job, department, office), same search box on calendar + availability, filters synced to the URL (survive refresh / back / shareable link), invalid URL values fall back to defaults, "Clear filters"
+- [x] Forbidden page: `/approvals` for non-approvers shows a "managers and HR only" page; backend refuses the same calls (403)
+- [x] Vitest: **13 tests** (search, URL parsers, tour targets exist in the code); `npm run build` OK; oxlint 0 errors (8 style warnings)
+- [x] Browser end-to-end: search results identical to the same filter on raw API data; URL ↔ search box ↔ counts in sync; reload keeps filters; garbage URL → defaults; engineer on /approvals blocked in UI and API
+
 ## 3. Assistant: P1 (2:00–2:50)
 - [ ] Models: QuestionLog, HRTicket
 - [ ] RAG pipeline (design to be discussed): chunk docs → retrieve → Ollama answer with sources
@@ -60,4 +69,4 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - One HR ticket per question (`question_log_id` unique).
 
 ## Notes / issues
-- uv was not on the machine: installed with `py -m pip install --user uv` (binary in `%APPDATA%PythonPython314Scripts`, not on PATH). `uv python install 3.12` failed on a Windows link error, so `uv sync --python <path to downloaded 3.12 python.exe>` was used once; afterwards plain `uv sync` / `uv run` work.
+- uv was not on the machine: installed with `py -m pip install --user uv` (binary in `%APPDATA%\Python\Python314\Scripts`, not on PATH). `uv python install 3.12` failed on a Windows link error, so `uv sync --python <path to downloaded 3.12 python.exe>` was used once; afterwards plain `uv sync` / `uv run` work.

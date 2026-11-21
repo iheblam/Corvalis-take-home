@@ -157,6 +157,9 @@ def check_request(
     if (end - start).days > 366:
         check.errors.append("A request cannot be longer than one year.")
         return check
+    if start > today.replace(year=today.year + 2, day=min(today.day, 28)):
+        check.errors.append("Leave can be requested at most two years ahead.")
+        return check
 
     holidays = holiday_dates(session, start, end)
     days = workdays.working_days(start, end, holidays)
@@ -189,7 +192,7 @@ def check_request(
             check.warnings.append("Days in next year are taken from next year's allowance.")
 
     elif leave_type == LeaveType.remote:
-        team_days = sorted({TEAM_DAYS[d.weekday()] for d in days if d.weekday() in TEAM_DAYS})
+        team_days = [TEAM_DAYS[w] for w in sorted({d.weekday() for d in days} & TEAM_DAYS.keys())]
         if team_days:
             verb = "are team days" if len(team_days) > 1 else "is a team day"
             check.errors.append(

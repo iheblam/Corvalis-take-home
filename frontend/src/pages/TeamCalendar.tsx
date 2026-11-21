@@ -1,19 +1,28 @@
 import { addMonths, endOfMonth, format, parseISO, startOfMonth } from 'date-fns'
-import { Fragment, useState } from 'react'
+import { Fragment } from 'react'
 import { useApi } from '../api/client'
 import type { Calendar, CalendarAbsence, Department, Office, VisibleType } from '../api/types'
-import { Avatar, Button, Card, Empty, ErrorBox, Loading, PageHeader, Select } from '../components/ui'
+import { Avatar, Button, Card, Empty, ErrorBox, Loading, PageHeader, SearchInput, Select } from '../components/ui'
 import { useUser } from '../context/CurrentUser'
+import { matchesSearch, parseDepartment, parseMonth, parseOffice } from '../filters'
 import { DEPARTMENT_LABEL, isoDate, OFFICE_LABEL, STATUS_LABEL, TYPE_COLOR, TYPE_LABEL } from '../labels'
+import { useUrlFilters } from '../useUrlFilters'
 
 const LEGEND: VisibleType[] = ['annual', 'remote', 'sick', 'away', 'unpaid']
 
 export function TeamCalendar() {
   const user = useUser()
-  const [month, setMonth] = useState(() => startOfMonth(new Date()))
-  const [department, setDepartment] = useState<Department | ''>(user.department)
-  const [office, setOffice] = useState<Office | ''>('')
-  const [onlyAway, setOnlyAway] = useState(false)
+  const { params: url, set } = useUrlFilters()
+  const month = parseMonth(url.get('month')) ?? startOfMonth(new Date())
+  const department = parseDepartment(url.get('department'), user.department)
+  const office = parseOffice(url.get('office'))
+  const onlyAway = url.get('away') === '1'
+  const search = url.get('q') ?? ''
+
+  const setMonth = (m: Date) => set({ month: format(m, 'yyyy-MM') })
+  const setDepartment = (d: Department | '') => set({ department: d || 'all' })
+  const setOffice = (o: Office | '') => set({ office: o })
+  const filtered = department !== user.department || office || onlyAway || search
 
   const params = new URLSearchParams({ start: isoDate(month), end: isoDate(endOfMonth(month)) })
   if (department) params.set('department', department)
@@ -21,7 +30,9 @@ export function TeamCalendar() {
   const { data, error, loading, reload } = useApi<Calendar>(`/calendar?${params}`)
 
   const todayIso = isoDate(new Date())
-  const rows = (data?.rows ?? []).filter((r) => !onlyAway || r.absences.length > 0)
+  const rows = (data?.rows ?? []).filter(
+    (r) => (!onlyAway || r.absences.length > 0) && matchesSearch(r.employee, search),
+  )
 
   const absenceOn = (absences: CalendarAbsence[], day: string) =>
     absences.find((a) => a.start_date <= day && a.end_date >= day)
@@ -42,10 +53,16 @@ export function TeamCalendar() {
             options={[{ value: '', label: 'All departments' }, ...Object.entries(DEPARTMENT_LABEL).map(([v, l]) => ({ value: v as Department, label: l }))]} />
           <Select label="Office" value={office} onChange={setOffice}
             options={[{ value: '', label: 'Both offices' }, ...Object.entries(OFFICE_LABEL).map(([v, l]) => ({ value: v as Office, label: l }))]} />
+          <SearchInput value={search} onChange={(q) => set({ q })} />
           <label className="flex items-center gap-2 pb-2 text-sm text-slate-700">
-            <input type="checkbox" checked={onlyAway} onChange={(e) => setOnlyAway(e.target.checked)} className="h-4 w-4 rounded" />
+            <input type="checkbox" checked={onlyAway} onChange={(e) => set({ away: e.target.checked ? '1' : null })} className="h-4 w-4 rounded" />
             Only people with an absence
           </label>
+          {filtered && (
+            <Button variant="ghost" className="mb-0.5" onClick={() => set({ department: null, office: null, away: null, q: null })}>
+              Clear filters
+            </Button>
+          )}
         </div>
         <div className="mt-4 flex flex-wrap gap-4 rounded-md text-xs text-slate-600" data-tour="calendar-legend">
           {LEGEND.map((t) => (
