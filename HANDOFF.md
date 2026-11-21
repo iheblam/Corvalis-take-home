@@ -68,7 +68,7 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 
 ## 4. Finish (2:50–3:30)
 - [ ] Empty / loading / error states, responsive check
-- [ ] README: problem & why, how to run, what works, what doesn't, what's next
+- [x] README: problem & why, features by role, how to run, project structure, data model (ER diagram), leave rules, RAG pipeline (flowchart + evaluation), API, security, tests, work report (what went well, issues found & fixed), left out / limits / next
 - [ ] 2–3 min recording
 - [ ] Export AI conversations
 
