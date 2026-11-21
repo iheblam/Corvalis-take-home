@@ -1,0 +1,139 @@
+CORVALIS · LEAVE & AVAILABILITY + RULES ASSISTANT
+How to run the project (Windows PowerShell)
+=====================================================================
+
+Open 3 terminals, all starting in the project folder (corvalis-leave).
+Run them in this order: 1. Assistant (Ollama)  2. Backend  3. Frontend.
+Then open http://localhost:5173 in your browser.
+
+
+---------------------------------------------------------------------
+0. ONE-TIME SETUP (first time only)
+---------------------------------------------------------------------
+
+You need:  uv (Python manager)  ·  Node.js 20+  ·  Ollama (for the assistant)
+
+Install uv if it is missing:
+    py -m pip install --user uv
+
+If "uv" is not recognised afterwards, use its full path instead of "uv":
+    & "$env:APPDATA\Python\Python314\Scripts\uv.exe" --version
+
+Install the backend libraries (Python 3.12 is installed automatically):
+    cd backend
+    uv sync
+    cd ..
+
+  If uv sync fails with "Missing expected target directory for Python minor version link":
+    uv python install 3.12
+    uv sync --python "$env:APPDATA\uv\python\cpython-3.12.16-windows-x86_64-none\python.exe"
+
+Install the frontend libraries:
+    cd frontend
+    npm install
+    cd ..
+
+Download the local AI model (3.3 GB, once):
+    ollama pull qwen3.5:4b
+
+Optional: copy the settings files (every value has a default):
+    Copy-Item backend\.env.example backend\.env
+    Copy-Item frontend\.env.example frontend\.env
+
+
+---------------------------------------------------------------------
+1. TERMINAL 1 · ASSISTANT (local AI, optional)
+---------------------------------------------------------------------
+
+    ollama serve
+
+  - Leave it running. If it says the address is already in use, Ollama is already running: skip this step.
+  - Without Ollama, the leave app works normally; the assistant says it is offline
+    and questions can still be sent to HR.
+
+
+---------------------------------------------------------------------
+2. TERMINAL 2 · BACKEND (API)  ->  http://localhost:8000  (docs: /docs)
+---------------------------------------------------------------------
+
+    cd backend
+    uv run uvicorn app.main:app --reload
+
+  - First start: creates backend\data\corvalis.db and fills it with sample data
+    (50 employees, ~340 leave requests, holidays, questions and HR tickets).
+  - First start also downloads the multilingual search model (2.24 GB) into backend\data\models,
+    in the background. The assistant answers once it is loaded (watch the terminal).
+
+
+---------------------------------------------------------------------
+3. TERMINAL 3 · FRONTEND (web app)  ->  http://localhost:5173
+---------------------------------------------------------------------
+
+    cd frontend
+    npm run dev
+
+
+---------------------------------------------------------------------
+4. USE IT
+---------------------------------------------------------------------
+
+Open http://localhost:5173 and pick who you are:
+    Camille Leroy    engineer   (request leave, ask the assistant)
+    Sophie Lambert   manager    (approve her team's requests)
+    Nathalie Claes   HR         (everyone's requests, HR inbox)
+Switch person at any time with "Signed in as" (top right).
+Click "Help" (top right) for the guide and the guided tour.
+The round chat button (bottom right) opens the assistant.
+
+
+---------------------------------------------------------------------
+5. USEFUL COMMANDS
+---------------------------------------------------------------------
+
+Reset the sample data (the backend can keep running):
+    cd backend
+    uv run python -m app.seed --reset
+
+Backend tests (138):
+    cd backend
+    uv run pytest
+
+Frontend tests (13) and production build:
+    cd frontend
+    npm test
+    npm run build
+
+Retrieval evaluation (6 modes, see reports\rag-evaluation.md):
+    cd backend
+    uv run python -m app.rag.evaluate --models sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 intfloat/multilingual-e5-large --candidates 5
+
+End-to-end assistant check with the LLM (needs Ollama running, ~5 min):
+    cd backend
+    uv run python -m app.rag.evaluate_answers
+
+Check the assistant status:
+    curl http://localhost:8000/api/assistant/status
+
+
+---------------------------------------------------------------------
+6. SETTINGS (backend\.env)
+---------------------------------------------------------------------
+
+    OLLAMA_MODEL=qwen3.5:4b                         LLM that writes the answers
+    EMBEDDING_MODEL=intfloat/multilingual-e5-large  search model (EN/FR/NL)
+    RETRIEVAL_MODE=dense                            dense | dense_rerank | sparse | sparse_rerank | hybrid | hybrid_rerank
+    RETRIEVAL_TOP_K=3                               policy extracts given to the LLM
+    RETRIEVAL_MIN_SCORE=0.75                        below this, "not in the policies"
+
+Restart the backend after changing .env.
+
+
+---------------------------------------------------------------------
+7. TROUBLESHOOTING
+---------------------------------------------------------------------
+
+"Cannot reach the server" in the app   -> the backend (terminal 2) is not running.
+Assistant says it is offline          -> start "ollama serve" and check "ollama list" shows qwen3.5:4b.
+First answer is slow (~10 s)          -> the models are loading; next answers take ~5 s.
+Port 8000 or 5173 already in use      -> another copy is running: close it, or stop it with Ctrl+C.
+Strange data after testing            -> reset it: uv run python -m app.seed --reset

@@ -58,6 +58,8 @@ Everything runs on the laptop. There is no API key and no paid service: the AI m
 
 ## 3. How to run it
 
+> All the commands in one place, step by step: **[RUN.txt](RUN.txt)**.
+
 **You need:**
 - [uv](https://docs.astral.sh/uv/) (it installs Python 3.12 for the backend)
 - Node.js 20+
