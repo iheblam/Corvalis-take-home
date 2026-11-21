@@ -48,12 +48,12 @@ function UserSwitcher() {
   const { user, employees, switchUser } = useCurrentUser()
   const roleTag = (e: Employee) => (e.role === 'hr' ? ' · HR' : e.direct_reports > 0 ? ' · Manager' : '')
   return (
-    <label className="flex items-center gap-2 rounded-lg text-sm" data-tour="user-switcher">
+    <label className="flex min-w-0 items-center gap-2 rounded-lg text-sm" data-tour="user-switcher">
       <span className="hidden text-slate-400 lg:inline">Signed in as</span>
-      {user && <Avatar name={user.full_name} size="sm" />}
+      {user && <span className="hidden sm:inline-flex"><Avatar name={user.full_name} size="sm" /></span>}
       <select
         aria-label="Switch user (demo)"
-        className="max-w-48 rounded-md border border-slate-600 bg-slate-800 px-2 py-1.5 text-sm text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
+        className="w-full max-w-36 min-w-0 truncate rounded-md border border-slate-600 sm:max-w-48 bg-slate-800 px-2 py-1.5 text-sm text-white focus:ring-2 focus:ring-blue-400 focus:outline-none"
         value={user?.id ?? ''}
         onChange={(e) => switchUser(e.target.value ? Number(e.target.value) : null)}
       >
@@ -95,14 +95,14 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen">
       <header className="sticky top-0 z-30 bg-slate-900 text-white shadow">
-        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3">
-          <NavLink to="/" className="flex items-center gap-2">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 px-4 py-3">
+          <NavLink to="/" className="flex shrink-0 items-center gap-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-600 font-bold">C</span>
             <span className="font-semibold">
               Corvalis <span className="hidden font-normal text-slate-400 sm:inline">· Leave & availability</span>
             </span>
           </NavLink>
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button
               onClick={() => openGuide()}
               data-tour="help"

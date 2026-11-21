@@ -67,7 +67,7 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Chat sessions: `ChatSession` table (title from the first question, created / last activity / ended), every question saved in its conversation; start (ends the previous one, reuses an empty one), end (confirm), reopen any past conversation; ended ones are read-only but still receive HR replies; unread-HR-reply badge on the chat button and in the list; in-place migration adds `session_id` and moves older questions into an "Earlier questions" conversation; 6 new tests (backend: 138)
 
 ## 4. Finish (2:50–3:30)
-- [ ] Empty / loading / error states, responsive check
+- [x] Empty / loading / error states, responsive check (375 px: all pages fit the screen after a header fix; chat panel full screen; conversations reachable on the phone page)
 - [x] README: problem & why, features by role, how to run, project structure, data model (ER diagram), leave rules, RAG pipeline (flowchart + evaluation), API, security, tests, work report (what went well, issues found & fixed), left out / limits / next
 - [ ] 2–3 min recording
 - [ ] Export AI conversations

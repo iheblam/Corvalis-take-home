@@ -268,7 +268,7 @@ Errors always come back as `{"detail": "a sentence a person can read"}` with sta
 | **Backend: 138 pytest tests** | every endpoint; leave rules (balance, carry-over, team days, overlaps…); permissions and anonymous access on every route; injection, CORS and security headers; seed data integrity (org chart, no overlaps, nobody over their allowance); data kept after a restart; chunker and tokenizer edge cases; all 6 retrieval modes; accuracy guard (≥ 95 % top-1 per language); assistant logic with a fake LLM (gates, citations, languages, offline); conversations and HR tickets |
 | **Frontend: 13 Vitest tests** | accent-insensitive search, safe URL filters, and a check that every tour step points at an element that exists |
 | **Evaluations** | retrieval (6 modes × 2 models) and end to end with the real LLM ([report](reports/rag-evaluation.md)) |
-| **In the browser** | every feature checked by hand (or scripted) as engineer, manager and HR; leave pages and guide also at phone width (the chat panel was not checked on a phone) |
+| **In the browser** | every feature checked by hand (or scripted) as engineer, manager and HR, at desktop and phone width (375 px: no page wider than the screen, chat panel full screen) |
 
 ## 11. Work report
 
@@ -304,6 +304,7 @@ Errors always come back as `{"detail": "a sentence a person can read"}` with sta
 | Language detector misread two Dutch answers as French ("je", "één") | evaluation | Ambiguous words removed, more Dutch markers |
 | `### Sub-heading` glued to the next sentence; Windows line endings in headings | chunker tests | Sub-headings become "Title:"; line endings normalised first |
 | Chat column cut off on the right | browser check | `min-w-0` on the grid column |
+| On a phone the header was 406 px wide on a 375 px screen, pushing the chat button off screen; past conversations unreachable on the full page | phone-width check | Narrower user switcher (avatar hidden on phones); a "Conversations" button on the page for small screens |
 | Questions asked before conversations existed | new feature | In-place migration moves them into an "Earlier questions" conversation |
 
 ## 12. What's left out, what doesn't work, what's next
