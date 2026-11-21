@@ -34,6 +34,7 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Approvals: approve, refuse with required reason, "also away" hint per request; HR: medical certificates to collect (shown first)
 - [x] Team calendar: month grid, department / office filters, only-absent toggle, holidays & weekends shaded, pending = light colour
 - [x] Who's available: day + shortcuts, department / office / name filters → available / working from home / away (back on …)
+- [x] "How to use the app" guide: opens once automatically (remembered in the browser), then any time from the ? Help icon in the header. "I want to…" quick finder + one section per page (steps, badges/legend, tips, "Go to" button); same icons in the nav and in the guide; keyboard ←/→/Esc; full-screen on phones
 - [x] Tested in the browser as engineer → manager → HR (request, approve, refuse, calendar, availability, certificates) + phone width. No console errors.
 
 ## 3. Assistant: P1 (2:00–2:50)

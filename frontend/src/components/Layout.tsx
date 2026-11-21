@@ -1,9 +1,11 @@
-import { useEffect, useState, type ReactNode } from 'react'
+import { useEffect, useState, type ComponentType, type ReactNode } from 'react'
 import { NavLink } from 'react-router'
 import { api } from '../api/client'
 import type { Employee, LeaveRequest } from '../api/types'
 import { canApprove, useCurrentUser, useUser } from '../context/CurrentUser'
 import { DEPARTMENT_LABEL } from '../labels'
+import { useGuide } from './Guide'
+import { ApproveIcon, CalendarIcon, HelpIcon, HomeIcon, ListIcon, PeopleIcon, RequestIcon } from './icons'
 import { Avatar } from './ui'
 
 /** Pages call this after approving/rejecting so the nav counter refreshes. */
@@ -58,14 +60,16 @@ export function Layout({ children }: { children: ReactNode }) {
   const user = useUser()
   const pending = usePendingCount(user)
 
-  const links: { to: string; label: string; badge?: number }[] = [
-    { to: '/', label: 'Overview' },
-    { to: '/request', label: 'Request leave' },
-    { to: '/my-requests', label: 'My requests' },
-    { to: '/calendar', label: 'Team calendar' },
-    { to: '/availability', label: "Who's available?" },
+  const { openGuide } = useGuide()
+
+  const links: { to: string; label: string; icon: ComponentType<{ size?: number }>; badge?: number }[] = [
+    { to: '/', label: 'Overview', icon: HomeIcon },
+    { to: '/request', label: 'Request leave', icon: RequestIcon },
+    { to: '/my-requests', label: 'My requests', icon: ListIcon },
+    { to: '/calendar', label: 'Team calendar', icon: CalendarIcon },
+    { to: '/availability', label: "Who's available?", icon: PeopleIcon },
   ]
-  if (canApprove(user)) links.push({ to: '/approvals', label: 'Approvals', badge: pending })
+  if (canApprove(user)) links.push({ to: '/approvals', label: 'Approvals', icon: ApproveIcon, badge: pending })
 
   return (
     <div className="min-h-screen">
@@ -77,7 +81,18 @@ export function Layout({ children }: { children: ReactNode }) {
               Corvalis <span className="hidden font-normal text-slate-400 sm:inline">· Leave & availability</span>
             </span>
           </NavLink>
-          <UserSwitcher />
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => openGuide()}
+              title="How to use the app"
+              aria-label="Help: how to use the app"
+              className="flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white"
+            >
+              <HelpIcon size={20} />
+              <span className="hidden md:inline">Help</span>
+            </button>
+            <UserSwitcher />
+          </div>
         </div>
         <nav className="mx-auto flex max-w-7xl gap-1 overflow-x-auto px-4">
           {links.map((l) => (
@@ -91,6 +106,7 @@ export function Layout({ children }: { children: ReactNode }) {
                 }`
               }
             >
+              <l.icon size={17} />
               {l.label}
               {!!l.badge && (
                 <span className="rounded-full bg-amber-400 px-1.5 text-xs font-semibold text-slate-900">{l.badge}</span>
