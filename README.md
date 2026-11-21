@@ -100,8 +100,9 @@ All settings are in **`backend/.env`**: the LLM model, the embedding model, the 
 | `cd backend; uv run python -m app.rag.evaluate` | Retrieval evaluation (6 modes) |
 | `cd backend; uv run python -m app.rag.evaluate_answers` | End-to-end check with the LLM |
 
-> Windows note: if `uv python install 3.12` fails with "Missing expected target directory for Python minor version link",
-> run `uv sync --python <path to the downloaded python.exe>` once (see HANDOFF.md). After that, `uv run` works normally.
+> Windows notes: if `uv` is "not recognized", add `%APPDATA%\Python\Python314\Scripts` to your PATH (see RUN.txt).
+> Start the backend with `uv run …` or `.venv\Scripts\python.exe`, not plain `python`: on a machine with Python 3.14,
+> `python` is the 3.14 launcher. If the backend says "No Python at …cpython-3.12…", run `uv python install 3.12` then `uv sync`.
 
 ## 4. Project structure
 
@@ -292,7 +293,7 @@ Errors always come back as `{"detail": "a sentence a person can read"}` with sta
 
 | Issue | How it showed up | Fix |
 |---|---|---|
-| `uv` missing, Python 3.14 only | setup | Installed uv with pip; `uv python install 3.12` failed on a Windows link error, so I pointed `uv sync` at the downloaded 3.12 |
+| `uv` missing, Python 3.14 only | setup | Installed uv with pip. Python 3.12 was first installed from the AI assistant's sandboxed shell, which writes `AppData` to a private copy: the backend ran for the assistant but not in my own terminal ("No Python at …"). Fixed by running `uv python install 3.12` + `uv sync` in my real terminal |
 | SQLModel refuses datetimes without a timezone | seed crashed | All timestamps stored in UTC |
 | "Thursday and Tuesday" in an error message | new test | Days sorted by weekday, not alphabetically |
 | `?department=__proto__` accepted by the URL filter | new test | `Object.hasOwn` instead of `in` |

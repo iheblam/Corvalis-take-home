@@ -80,4 +80,4 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - One HR ticket per question (`question_log_id` unique).
 
 ## Notes / issues
-- uv was not on the machine: installed with `py -m pip install --user uv` (binary in `%APPDATA%\Python\Python314\Scripts`, not on PATH). `uv python install 3.12` failed on a Windows link error, so `uv sync --python <path to downloaded 3.12 python.exe>` was used once; afterwards plain `uv sync` / `uv run` work.
+- uv was not on the machine: installed with `py -m pip install --user uv` (binary in `%APPDATA%\Python\Python314\Scripts`, not on PATH). Python 3.12 was first installed from the AI's sandboxed shell, which writes `AppData` to a private copy: it worked for the AI, but the real terminal said "No Python at …cpython-3.12…". Fixed by running `uv python install 3.12` + `uv sync` in the real terminal (worked first time, no link error).

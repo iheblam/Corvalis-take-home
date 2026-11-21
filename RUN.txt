@@ -32,9 +32,10 @@ Install the backend libraries (Python 3.12 is installed automatically):
     uv sync
     cd ..
 
-  If uv sync fails with "Missing expected target directory for Python minor version link":
+  If the backend later fails with "No Python at '...cpython-3.12...python.exe'", Python 3.12 is missing
+  on this computer: install it, then sync again (in the backend folder):
     uv python install 3.12
-    uv sync --python "$env:APPDATA\uv\python\cpython-3.12.16-windows-x86_64-none\python.exe"
+    uv sync --python 3.12
 
 Install the frontend libraries:
     cd frontend
