@@ -1,0 +1,216 @@
+[
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "dense_rerank",
+    "candidates": 3,
+    "hit@1": 0.98,
+    "hit@3": 1.0,
+    "mrr": 0.99,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.9523809523809523,
+        "hit@3": 1.0,
+        "mrr": 0.9761904761904762
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 203.42667799821356,
+    "latency_ms_p95": 264.6024999994552,
+    "model_load_s": 4.040877999999793,
+    "misses": [
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      }
+    ]
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "hybrid_rerank",
+    "candidates": 3,
+    "hit@1": 0.94,
+    "hit@3": 0.96,
+    "mrr": 0.95,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.8571428571428571,
+        "hit@3": 0.9047619047619048,
+        "mrr": 0.8809523809523809
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 195.4605979999178,
+    "latency_ms_p95": 234.3799000082072,
+    "model_load_s": 4.040877999999793,
+    "misses": [
+      {
+        "q": "Can I take a cab to the train station?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": "it-security.md#vpn"
+      },
+      {
+        "q": "Can I install Spotify on my laptop?",
+        "gold": "it-security.md#software-installation",
+        "rank": null,
+        "top1": "it-security.md#lost-or-stolen-devices"
+      },
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      }
+    ]
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "dense_rerank",
+    "candidates": 5,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "mrr": 1.0,
+    "by_lang": {
+      "en": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 349.7341700003017,
+    "latency_ms_p95": 398.7946999986889,
+    "model_load_s": 2.911737100002938,
+    "misses": []
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "hybrid_rerank",
+    "candidates": 5,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "mrr": 1.0,
+    "by_lang": {
+      "en": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 367.7342859993223,
+    "latency_ms_p95": 458.9510999940103,
+    "model_load_s": 2.911737100002938,
+    "misses": []
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "dense_rerank",
+    "candidates": 8,
+    "hit@1": 0.98,
+    "hit@3": 1.0,
+    "mrr": 0.99,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.9523809523809523,
+        "hit@3": 1.0,
+        "mrr": 0.9761904761904762
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 611.8918579988531,
+    "latency_ms_p95": 701.3681000098586,
+    "model_load_s": 3.2999459999991814,
+    "misses": [
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      }
+    ]
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "hybrid_rerank",
+    "candidates": 8,
+    "hit@1": 0.98,
+    "hit@3": 1.0,
+    "mrr": 0.99,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.9523809523809523,
+        "hit@3": 1.0,
+        "mrr": 0.9761904761904762
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 552.2427740006242,
+    "latency_ms_p95": 627.4561000027461,
+    "model_load_s": 3.2999459999991814,
+    "misses": [
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      }
+    ]
+  }
+]

@@ -1,0 +1,1095 @@
+[
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "dense",
+    "candidates": null,
+    "hit@1": 0.94,
+    "hit@3": 1.0,
+    "mrr": 0.9666666666666667,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.9523809523809523,
+        "hit@3": 1.0,
+        "mrr": 0.9761904761904762
+      },
+      "fr": {
+        "hit@1": 0.9444444444444444,
+        "hit@3": 1.0,
+        "mrr": 0.9629629629629629
+      },
+      "nl": {
+        "hit@1": 0.9090909090909091,
+        "hit@3": 1.0,
+        "mrr": 0.9545454545454546
+      }
+    },
+    "latency_ms_mean": 4.455448001099285,
+    "latency_ms_p95": 5.327299993950874,
+    "model_load_s": 3.655193300000974,
+    "answerability": {
+      "auc": 0.8583333333333333,
+      "threshold": 0.24614983797073364,
+      "accuracy": 0.8387096774193549
+    },
+    "misses": [
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      },
+      {
+        "q": "Faut-il plusieurs devis pour un achat de 4 000 euros ?",
+        "gold": "purchasing.md#quotes",
+        "rank": 3,
+        "top1": "purchasing.md#small-purchases"
+      },
+      {
+        "q": "Waar bestel ik een nieuwe laptop?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": 2,
+        "top1": "onboarding.md#accounts"
+      }
+    ]
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "dense_rerank",
+    "candidates": 5,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "mrr": 1.0,
+    "by_lang": {
+      "en": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 320.55723800032865,
+    "latency_ms_p95": 395.64199998858385,
+    "model_load_s": 3.655193300000974,
+    "answerability": {
+      "auc": 0.9816666666666667,
+      "threshold": -6.326289176940918,
+      "accuracy": 0.9516129032258065
+    },
+    "misses": []
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "sparse",
+    "candidates": null,
+    "hit@1": 0.46,
+    "hit@3": 0.58,
+    "mrr": 0.5066666666666666,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.7142857142857143,
+        "hit@3": 0.8095238095238095,
+        "mrr": 0.753968253968254
+      },
+      "fr": {
+        "hit@1": 0.3333333333333333,
+        "hit@3": 0.3888888888888889,
+        "mrr": 0.35185185185185186
+      },
+      "nl": {
+        "hit@1": 0.18181818181818182,
+        "hit@3": 0.45454545454545453,
+        "mrr": 0.28787878787878785
+      }
+    },
+    "latency_ms_mean": 0.07075000001350418,
+    "latency_ms_p95": 0.10099999781232327,
+    "model_load_s": 3.655193300000974,
+    "answerability": {
+      "auc": 0.7175,
+      "threshold": -Infinity,
+      "accuracy": 0.8064516129032258
+    },
+    "misses": [
+      {
+        "q": "When do I need a doctor's note?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": "purchasing.md#subscriptions"
+      },
+      {
+        "q": "Can I take a cab to the train station?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": "it-security.md#vpn"
+      },
+      {
+        "q": "Is driving from home to the office reimbursed?",
+        "gold": "expenses.md#mileage",
+        "rank": 2,
+        "top1": "expenses.md#meals"
+      },
+      {
+        "q": "Can I install Spotify on my laptop?",
+        "gold": "it-security.md#software-installation",
+        "rank": null,
+        "top1": "purchasing.md#approved-suppliers"
+      },
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 3,
+        "top1": "leave.md#sick-leave"
+      },
+      {
+        "q": "Where do I order a new monitor?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": null,
+        "top1": "onboarding.md#first-day"
+      },
+      {
+        "q": "Combien de jours de congé ai-je par an ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je reporter mes congés non pris à l'année prochaine ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Combien de jours de télétravail par semaine ?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Le bureau est-il fermé les jours fériés ?",
+        "gold": "leave.md#public-holidays",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quel est le plafond pour le repas du soir en déplacement ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "L'alcool est-il remboursé ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je voyager en première classe en train ?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Qui doit approuver une note de frais de 600 euros ?",
+        "gold": "expenses.md#approval",
+        "rank": 3,
+        "top1": "purchasing.md#quotes"
+      },
+      {
+        "q": "Combien de caractères pour un mot de passe ?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "On m'a volé mon ordinateur portable, que faire ?",
+        "gold": "it-security.md#lost-or-stolen-devices",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quand a lieu l'entretien de fin de période d'essai ?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Un abonnement logiciel doit-il être validé par l'IT ?",
+        "gold": "purchasing.md#subscriptions",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoeveel vakantiedagen heb ik per jaar?",
+        "gold": "leave.md#annual-leave",
+        "rank": 2,
+        "top1": "leave.md#remote-work"
+      },
+      {
+        "q": "Wanneer heb ik een doktersbriefje nodig?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik op dinsdag thuiswerken?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoeveel krijg ik terug voor een avondmaal?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wie keurt een onkostennota van 700 euro goed?",
+        "gold": "expenses.md#approval",
+        "rank": 3,
+        "top1": "purchasing.md#quotes"
+      },
+      {
+        "q": "Ik ben mijn laptop verloren, wat moet ik doen?",
+        "gold": "it-security.md#lost-or-stolen-devices",
+        "rank": 3,
+        "top1": "purchasing.md#approved-suppliers"
+      },
+      {
+        "q": "Hoe lang moet mijn wachtwoord zijn?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wanneer is het evaluatiegesprek na de proefperiode?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik kleine aankopen met de bedrijfskaart betalen?",
+        "gold": "purchasing.md#small-purchases",
+        "rank": null,
+        "top1": null
+      }
+    ]
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "sparse_rerank",
+    "candidates": 5,
+    "hit@1": 0.56,
+    "hit@3": 0.58,
+    "mrr": 0.57,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.7619047619047619,
+        "hit@3": 0.8095238095238095,
+        "mrr": 0.7857142857142857
+      },
+      "fr": {
+        "hit@1": 0.3888888888888889,
+        "hit@3": 0.3888888888888889,
+        "mrr": 0.3888888888888889
+      },
+      "nl": {
+        "hit@1": 0.45454545454545453,
+        "hit@3": 0.45454545454545453,
+        "mrr": 0.45454545454545453
+      }
+    },
+    "latency_ms_mean": 115.17274200014072,
+    "latency_ms_p95": 321.9991999940248,
+    "model_load_s": 3.655193300000974,
+    "answerability": {
+      "auc": 0.745,
+      "threshold": -Infinity,
+      "accuracy": 0.8064516129032258
+    },
+    "misses": [
+      {
+        "q": "When do I need a doctor's note?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": "expenses.md#approval"
+      },
+      {
+        "q": "Can I take a cab to the train station?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": "it-security.md#vpn"
+      },
+      {
+        "q": "Can I install Spotify on my laptop?",
+        "gold": "it-security.md#software-installation",
+        "rank": null,
+        "top1": "it-security.md#lost-or-stolen-devices"
+      },
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      },
+      {
+        "q": "Where do I order a new monitor?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": null,
+        "top1": "onboarding.md#first-day"
+      },
+      {
+        "q": "Combien de jours de congé ai-je par an ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je reporter mes congés non pris à l'année prochaine ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Combien de jours de télétravail par semaine ?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Le bureau est-il fermé les jours fériés ?",
+        "gold": "leave.md#public-holidays",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quel est le plafond pour le repas du soir en déplacement ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "L'alcool est-il remboursé ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je voyager en première classe en train ?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Combien de caractères pour un mot de passe ?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "On m'a volé mon ordinateur portable, que faire ?",
+        "gold": "it-security.md#lost-or-stolen-devices",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quand a lieu l'entretien de fin de période d'essai ?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Un abonnement logiciel doit-il être validé par l'IT ?",
+        "gold": "purchasing.md#subscriptions",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wanneer heb ik een doktersbriefje nodig?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik op dinsdag thuiswerken?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoeveel krijg ik terug voor een avondmaal?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoe lang moet mijn wachtwoord zijn?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wanneer is het evaluatiegesprek na de proefperiode?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik kleine aankopen met de bedrijfskaart betalen?",
+        "gold": "purchasing.md#small-purchases",
+        "rank": null,
+        "top1": null
+      }
+    ]
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "hybrid",
+    "candidates": null,
+    "hit@1": 0.86,
+    "hit@3": 0.96,
+    "mrr": 0.9166666666666667,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.7619047619047619,
+        "hit@3": 0.9047619047619048,
+        "mrr": 0.8492063492063492
+      },
+      "fr": {
+        "hit@1": 0.9444444444444444,
+        "hit@3": 1.0,
+        "mrr": 0.9722222222222222
+      },
+      "nl": {
+        "hit@1": 0.9090909090909091,
+        "hit@3": 1.0,
+        "mrr": 0.9545454545454546
+      }
+    },
+    "latency_ms_mean": 4.467501999461092,
+    "latency_ms_p95": 5.429800003184937,
+    "model_load_s": 3.655193300000974,
+    "answerability": {
+      "auc": 0.6908333333333333,
+      "threshold": 0.01639344262295082,
+      "accuracy": 0.8064516129032258
+    },
+    "misses": [
+      {
+        "q": "When do I need a doctor's note?",
+        "gold": "leave.md#sick-leave",
+        "rank": 3,
+        "top1": "purchasing.md#subscriptions"
+      },
+      {
+        "q": "Can I take a cab to the train station?",
+        "gold": "expenses.md#travel",
+        "rank": 4,
+        "top1": "expenses.md#meals"
+      },
+      {
+        "q": "Can I install Spotify on my laptop?",
+        "gold": "it-security.md#software-installation",
+        "rank": 4,
+        "top1": "purchasing.md#approved-suppliers"
+      },
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      },
+      {
+        "q": "Where do I order a new monitor?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": 2,
+        "top1": "onboarding.md#first-day"
+      },
+      {
+        "q": "Faut-il plusieurs devis pour un achat de 4 000 euros ?",
+        "gold": "purchasing.md#quotes",
+        "rank": 2,
+        "top1": "purchasing.md#small-purchases"
+      },
+      {
+        "q": "Waar bestel ik een nieuwe laptop?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": 2,
+        "top1": "onboarding.md#accounts"
+      }
+    ]
+  },
+  {
+    "model": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "mode": "hybrid_rerank",
+    "candidates": 5,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "mrr": 1.0,
+    "by_lang": {
+      "en": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 313.8039180013584,
+    "latency_ms_p95": 379.6176999894669,
+    "model_load_s": 3.655193300000974,
+    "answerability": {
+      "auc": 0.98,
+      "threshold": -6.326289176940918,
+      "accuracy": 0.9516129032258065
+    },
+    "misses": []
+  },
+  {
+    "model": "intfloat/multilingual-e5-large",
+    "mode": "dense",
+    "candidates": null,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "mrr": 1.0,
+    "by_lang": {
+      "en": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 45.72033400007058,
+    "latency_ms_p95": 53.44119999790564,
+    "model_load_s": 5.576284300012048,
+    "answerability": {
+      "auc": 0.98,
+      "threshold": 0.7829357385635376,
+      "accuracy": 0.9516129032258065
+    },
+    "misses": []
+  },
+  {
+    "model": "intfloat/multilingual-e5-large",
+    "mode": "dense_rerank",
+    "candidates": 5,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "mrr": 1.0,
+    "by_lang": {
+      "en": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 362.741410000599,
+    "latency_ms_p95": 412.86260000197217,
+    "model_load_s": 5.576284300012048,
+    "answerability": {
+      "auc": 0.9783333333333334,
+      "threshold": -7.303689956665039,
+      "accuracy": 0.9354838709677419
+    },
+    "misses": []
+  },
+  {
+    "model": "intfloat/multilingual-e5-large",
+    "mode": "sparse",
+    "candidates": null,
+    "hit@1": 0.46,
+    "hit@3": 0.58,
+    "mrr": 0.5066666666666666,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.7142857142857143,
+        "hit@3": 0.8095238095238095,
+        "mrr": 0.753968253968254
+      },
+      "fr": {
+        "hit@1": 0.3333333333333333,
+        "hit@3": 0.3888888888888889,
+        "mrr": 0.35185185185185186
+      },
+      "nl": {
+        "hit@1": 0.18181818181818182,
+        "hit@3": 0.45454545454545453,
+        "mrr": 0.28787878787878785
+      }
+    },
+    "latency_ms_mean": 0.07685999909881502,
+    "latency_ms_p95": 0.11930000619031489,
+    "model_load_s": 5.576284300012048,
+    "answerability": {
+      "auc": 0.7175,
+      "threshold": -Infinity,
+      "accuracy": 0.8064516129032258
+    },
+    "misses": [
+      {
+        "q": "When do I need a doctor's note?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": "purchasing.md#subscriptions"
+      },
+      {
+        "q": "Can I take a cab to the train station?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": "it-security.md#vpn"
+      },
+      {
+        "q": "Is driving from home to the office reimbursed?",
+        "gold": "expenses.md#mileage",
+        "rank": 2,
+        "top1": "expenses.md#meals"
+      },
+      {
+        "q": "Can I install Spotify on my laptop?",
+        "gold": "it-security.md#software-installation",
+        "rank": null,
+        "top1": "purchasing.md#approved-suppliers"
+      },
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 3,
+        "top1": "leave.md#sick-leave"
+      },
+      {
+        "q": "Where do I order a new monitor?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": null,
+        "top1": "onboarding.md#first-day"
+      },
+      {
+        "q": "Combien de jours de congé ai-je par an ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je reporter mes congés non pris à l'année prochaine ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Combien de jours de télétravail par semaine ?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Le bureau est-il fermé les jours fériés ?",
+        "gold": "leave.md#public-holidays",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quel est le plafond pour le repas du soir en déplacement ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "L'alcool est-il remboursé ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je voyager en première classe en train ?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Qui doit approuver une note de frais de 600 euros ?",
+        "gold": "expenses.md#approval",
+        "rank": 3,
+        "top1": "purchasing.md#quotes"
+      },
+      {
+        "q": "Combien de caractères pour un mot de passe ?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "On m'a volé mon ordinateur portable, que faire ?",
+        "gold": "it-security.md#lost-or-stolen-devices",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quand a lieu l'entretien de fin de période d'essai ?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Un abonnement logiciel doit-il être validé par l'IT ?",
+        "gold": "purchasing.md#subscriptions",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoeveel vakantiedagen heb ik per jaar?",
+        "gold": "leave.md#annual-leave",
+        "rank": 2,
+        "top1": "leave.md#remote-work"
+      },
+      {
+        "q": "Wanneer heb ik een doktersbriefje nodig?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik op dinsdag thuiswerken?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoeveel krijg ik terug voor een avondmaal?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wie keurt een onkostennota van 700 euro goed?",
+        "gold": "expenses.md#approval",
+        "rank": 3,
+        "top1": "purchasing.md#quotes"
+      },
+      {
+        "q": "Ik ben mijn laptop verloren, wat moet ik doen?",
+        "gold": "it-security.md#lost-or-stolen-devices",
+        "rank": 3,
+        "top1": "purchasing.md#approved-suppliers"
+      },
+      {
+        "q": "Hoe lang moet mijn wachtwoord zijn?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wanneer is het evaluatiegesprek na de proefperiode?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik kleine aankopen met de bedrijfskaart betalen?",
+        "gold": "purchasing.md#small-purchases",
+        "rank": null,
+        "top1": null
+      }
+    ]
+  },
+  {
+    "model": "intfloat/multilingual-e5-large",
+    "mode": "sparse_rerank",
+    "candidates": 5,
+    "hit@1": 0.56,
+    "hit@3": 0.58,
+    "mrr": 0.57,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.7619047619047619,
+        "hit@3": 0.8095238095238095,
+        "mrr": 0.7857142857142857
+      },
+      "fr": {
+        "hit@1": 0.3888888888888889,
+        "hit@3": 0.3888888888888889,
+        "mrr": 0.3888888888888889
+      },
+      "nl": {
+        "hit@1": 0.45454545454545453,
+        "hit@3": 0.45454545454545453,
+        "mrr": 0.45454545454545453
+      }
+    },
+    "latency_ms_mean": 118.17198600008851,
+    "latency_ms_p95": 333.76720000524074,
+    "model_load_s": 5.576284300012048,
+    "answerability": {
+      "auc": 0.745,
+      "threshold": -Infinity,
+      "accuracy": 0.8064516129032258
+    },
+    "misses": [
+      {
+        "q": "When do I need a doctor's note?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": "expenses.md#approval"
+      },
+      {
+        "q": "Can I take a cab to the train station?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": "it-security.md#vpn"
+      },
+      {
+        "q": "Can I install Spotify on my laptop?",
+        "gold": "it-security.md#software-installation",
+        "rank": null,
+        "top1": "it-security.md#lost-or-stolen-devices"
+      },
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      },
+      {
+        "q": "Where do I order a new monitor?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": null,
+        "top1": "onboarding.md#first-day"
+      },
+      {
+        "q": "Combien de jours de congé ai-je par an ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je reporter mes congés non pris à l'année prochaine ?",
+        "gold": "leave.md#annual-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Combien de jours de télétravail par semaine ?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Le bureau est-il fermé les jours fériés ?",
+        "gold": "leave.md#public-holidays",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quel est le plafond pour le repas du soir en déplacement ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "L'alcool est-il remboursé ?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Puis-je voyager en première classe en train ?",
+        "gold": "expenses.md#travel",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Combien de caractères pour un mot de passe ?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "On m'a volé mon ordinateur portable, que faire ?",
+        "gold": "it-security.md#lost-or-stolen-devices",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Quand a lieu l'entretien de fin de période d'essai ?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Un abonnement logiciel doit-il être validé par l'IT ?",
+        "gold": "purchasing.md#subscriptions",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wanneer heb ik een doktersbriefje nodig?",
+        "gold": "leave.md#sick-leave",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik op dinsdag thuiswerken?",
+        "gold": "leave.md#remote-work",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoeveel krijg ik terug voor een avondmaal?",
+        "gold": "expenses.md#meals",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Hoe lang moet mijn wachtwoord zijn?",
+        "gold": "it-security.md#passwords",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Wanneer is het evaluatiegesprek na de proefperiode?",
+        "gold": "onboarding.md#probation-review",
+        "rank": null,
+        "top1": null
+      },
+      {
+        "q": "Mag ik kleine aankopen met de bedrijfskaart betalen?",
+        "gold": "purchasing.md#small-purchases",
+        "rank": null,
+        "top1": null
+      }
+    ]
+  },
+  {
+    "model": "intfloat/multilingual-e5-large",
+    "mode": "hybrid",
+    "candidates": null,
+    "hit@1": 0.9,
+    "hit@3": 0.96,
+    "mrr": 0.9366666666666668,
+    "by_lang": {
+      "en": {
+        "hit@1": 0.7619047619047619,
+        "hit@3": 0.9047619047619048,
+        "mrr": 0.8492063492063492
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 46.13762399996631,
+    "latency_ms_p95": 53.00400000123773,
+    "model_load_s": 5.576284300012048,
+    "answerability": {
+      "auc": 0.6866666666666666,
+      "threshold": 0.01639344262295082,
+      "accuracy": 0.8064516129032258
+    },
+    "misses": [
+      {
+        "q": "When do I need a doctor's note?",
+        "gold": "leave.md#sick-leave",
+        "rank": 3,
+        "top1": "purchasing.md#subscriptions"
+      },
+      {
+        "q": "Can I take a cab to the train station?",
+        "gold": "expenses.md#travel",
+        "rank": 4,
+        "top1": "it-security.md#vpn"
+      },
+      {
+        "q": "Can I install Spotify on my laptop?",
+        "gold": "it-security.md#software-installation",
+        "rank": 4,
+        "top1": "purchasing.md#approved-suppliers"
+      },
+      {
+        "q": "What time should I arrive on my first day?",
+        "gold": "onboarding.md#first-day",
+        "rank": 2,
+        "top1": "leave.md#sick-leave"
+      },
+      {
+        "q": "Where do I order a new monitor?",
+        "gold": "purchasing.md#approved-suppliers",
+        "rank": 2,
+        "top1": "onboarding.md#first-day"
+      }
+    ]
+  },
+  {
+    "model": "intfloat/multilingual-e5-large",
+    "mode": "hybrid_rerank",
+    "candidates": 5,
+    "hit@1": 1.0,
+    "hit@3": 1.0,
+    "mrr": 1.0,
+    "by_lang": {
+      "en": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "fr": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      },
+      "nl": {
+        "hit@1": 1.0,
+        "hit@3": 1.0,
+        "mrr": 1.0
+      }
+    },
+    "latency_ms_mean": 356.20482399943285,
+    "latency_ms_p95": 410.2894999959972,
+    "model_load_s": 5.576284300012048,
+    "answerability": {
+      "auc": 0.9766666666666667,
+      "threshold": -7.52872896194458,
+      "accuracy": 0.9354838709677419
+    },
+    "misses": []
+  }
+]

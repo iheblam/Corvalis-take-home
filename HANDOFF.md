@@ -48,8 +48,15 @@ Time budget: ~3h, 4h max. Started: 2026-11-21.
 - [x] Browser end-to-end: search results identical to the same filter on raw API data; URL ↔ search box ↔ counts in sync; reload keeps filters; garbage URL → defaults; engineer on /approvals blocked in UI and API
 
 ## 3. Assistant: P1 (2:00–2:50)
+- [x] `.env`: `OLLAMA_MODEL=qwen3.5:4b`, `EMBEDDING_MODEL`, `RERANKER_MODEL`, `RETRIEVAL_MODE`, `RETRIEVAL_TOP_K`, `RERANK_CANDIDATES`, `RETRIEVAL_MIN_SCORE`, `MODELS_CACHE_DIR` (models in `backend/data/models`, gitignored)
+- [x] Chunking (`app/rag/chunking.py`): one chunk per `##` section, prefixed "Document > Section" → 21 chunks; regex handling of CRLF/BOM, intro text, `###`, empty/duplicate sections, long sections, markdown noise
+- [x] BM25 (`rank_bm25`) with regex tokenizer for EN/FR/NL (`app/rag/text.py`): accents, elisions, `2,500`/`2.500`/`4 000`, `€`, stop-words, light plural stripping
+- [x] Dense (fastembed, CPU) + multilingual cross-encoder reranker (fastembed, CPU) + hybrid RRF (`app/rag/retrieval.py`), 6 modes behind one `search()`
+- [x] Evaluation (`app/rag/evaluate.py`): 50 labelled questions (21 EN / 18 FR / 11 NL) + 12 off-topic; Hit@1/3, MRR, latency, answerability AUC; 6 modes × 2 embedding models + reranker candidate sweep
+- [x] **Report: `reports/rag-evaluation.md` → dense `multilingual-e5-large`, no reranker: 100% top-1 in EN/FR/NL, ~46 ms; BM25 fails across languages (FR 33%, NL 18%); hybrid hurts on this small corpus; reranker best at 5 candidates (lighter alternative)**
+- [x] Tests: `tests/test_rag.py` (20 tests: chunker edge cases, tokenizer, BM25, every mode, accuracy regression ≥95% per language, off-topic gate) → backend total 102 passing
 - [ ] Models: QuestionLog, HRTicket
-- [ ] RAG pipeline (design to be discussed): chunk docs → retrieve → Ollama answer with sources
+- [ ] Generation: prompt with the 3 extracts + sources, answer in the question's language, "not in the documents" → offer HR ticket; Ollama call
 - [ ] Endpoints: ask, feedback, my questions, escalate, HR tickets list / answer
 - [ ] Pages: Ask the rules (+ My questions), HR inbox
 - [ ] Graceful message when Ollama is not running

@@ -20,5 +20,14 @@ class Settings(BaseSettings):
     ollama_model: str = "qwen3.5:4b"
     docs_dir: Path = PROJECT_DIR / "docs"
 
+    # Retrieval (fastembed, CPU). Multilingual: questions in FR/NL/EN, policies in EN.
+    embedding_model: str = "intfloat/multilingual-e5-large"
+    reranker_model: str = "BAAI/bge-reranker-v2-m3-int8"
+    models_cache_dir: Path = BACKEND_DIR / "data" / "models"
+    retrieval_mode: str = "dense"
+    retrieval_top_k: int = 3
+    rerank_candidates: int = 5
+    retrieval_min_score: float = 0.75
+
 
 settings = Settings()

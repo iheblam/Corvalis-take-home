@@ -1,0 +1,14 @@
+[
+  {"lang": "en", "q": "What is on the canteen menu today?"},
+  {"lang": "en", "q": "Can I bring my dog to the office?"},
+  {"lang": "en", "q": "What is the wifi password for guests?"},
+  {"lang": "en", "q": "When is the company Christmas party?"},
+  {"lang": "fr", "q": "Quel est le salaire d'un ingénieur junior ?"},
+  {"lang": "fr", "q": "Puis-je avoir une voiture de société ?"},
+  {"lang": "fr", "q": "Où se trouve le parking vélo à Liège ?"},
+  {"lang": "fr", "q": "Combien de congé de paternité ai-je droit ?"},
+  {"lang": "nl", "q": "Hoeveel kost een parkeerplaats in Brussel?"},
+  {"lang": "nl", "q": "Krijg ik een maaltijdcheque?"},
+  {"lang": "nl", "q": "Wie is de CEO van Corvalis?"},
+  {"lang": "nl", "q": "Mag ik mijn eigen bureaustoel meebrengen?"}
+]
